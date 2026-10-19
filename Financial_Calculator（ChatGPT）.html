@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content"><title>Financial Calculator</title><meta name="description" content="毎月の積立から、将来の資産を見通す。将来価値・必要積立額・必要利回り・達成までの期間・毎月の取崩額を計算できる金融電卓。"><link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2213%22%20fill%3D%22%23142e47%22%2F%3E%3Cpath%20d%3D%22M43%2015H21l15%2017-15%2017h23%22%20fill%3D%22none%22%20stroke%3D%22%23a5dfd5%22%20stroke-width%3D%225%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E%0A" type="image/svg+xml"><style>
+:root{--navy:#142e47;--ink:#1c3347;--muted:#657581;--line:#dce4e9;--teal:#147e78;--paper:#f4f7f9}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:'Noto Sans JP','Yu Gothic',Meiryo,sans-serif;font-size:16px;line-height:1.6}button,input,select{font:inherit}button,a,input,select,summary{-webkit-tap-highlight-color:transparent}button{cursor:pointer}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #339cba;outline-offset:4px}.app{max-width:1280px;margin:auto;padding:0 44px}header{height:104px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:13px;font-size:21px;font-weight:700;letter-spacing:.04em}.brand small{font-size:12px;display:block;letter-spacing:.18em;font-weight:500;margin-top:1px}.mark{background:var(--navy);color:#fff;width:43px;height:49px;display:grid;place-items:center;border-radius:9px;font-family:Georgia,serif;font-size:30px;font-weight:400}.header-note{font-size:14px;color:var(--muted)}.intro{display:flex;justify-content:space-between;align-items:center;margin:34px 0 27px}.eyebrow{font-size:12px;letter-spacing:.18em;color:var(--teal);font-weight:700}h1{font-weight:600;font-size:30px;letter-spacing:.03em;margin:7px 0 0}.intro p{color:var(--muted);font-size:14px;margin:0;line-height:1.9}.modes{margin-top:25px;display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line);gap:8px;margin-bottom:25px}.modes button{border:0;background:transparent;color:var(--muted);font-size:16px;padding:17px 8px;border-bottom:3px solid transparent;white-space:nowrap;transition:background .15s}.modes button:hover{background:#eaf0f3}.modes span{font-size:12px;margin-right:10px;font-family:Arial,sans-serif;opacity:.65}.modes .active{color:var(--navy);font-weight:700;border-color:var(--teal);background:#e8f0f1;border-radius:8px 8px 0 0}.workspace{display:grid;grid-template-columns:355px minmax(0,1fr);gap:25px;align-items:start}.input-panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:25px 26px 20px}.panel-head{display:flex;align-items:center;justify-content:space-between}h2{font-size:17px;margin:0;font-weight:700}.reset{border:none;background:none;color:var(--muted);font-size:13px;padding:6px 0 6px 10px}.reset:hover{color:var(--teal)}.muted{color:var(--muted);font-size:13px;margin:4px 0 22px}.field{margin-bottom:19px}label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}.number-box{display:flex;align-items:center;border:1px solid #d3dee5;border-radius:7px;padding:6px 13px;background:#fbfcfd;transition:border-color .15s}.number-box:focus-within{border-color:var(--teal);box-shadow:0 0 0 2px #147e7812}.number-box input{width:100%;min-width:0;outline:none;background:transparent;border:0;color:var(--ink);font-family:Arial,sans-serif;font-size:26px;line-height:1.5;font-variant-numeric:tabular-nums}.number-box span{font-size:14px;color:var(--muted);white-space:nowrap;margin-left:10px}.duration{display:grid;grid-template-columns:1fr 1fr;gap:10px}input[type=range]{display:block;width:100%;accent-color:var(--teal);height:5px;margin:15px 0 8px;cursor:pointer}.range-label{display:flex;justify-content:space-between;color:#788693;font-size:12px}.compact{margin-bottom:15px}select{width:100%;border:1px solid #d3dee5;background:#fff;color:var(--ink);border-radius:7px;font-size:14px;padding:11px 8px;cursor:pointer}.auto-note{font-size:12px;color:var(--muted);padding-top:14px;border-top:1px solid #e9eef1;text-align:center}.auto-note span{font-size:15px;color:var(--teal);margin-right:4px}.output-panel{min-width:0}.result-card{background:var(--navy);border-radius:16px;padding:27px 32px 25px;color:#fff;box-shadow:0 9px 26px #173b5520;position:relative;overflow:hidden}.result-top{display:flex;justify-content:space-between;align-items:center;font-size:16px;gap:10px}.result-tag{padding:4px 10px;border:1px solid #ffffff30;border-radius:20px;color:#b8d4da;font-size:12px;white-space:nowrap}.result-value{display:flex;gap:12px;align-items:baseline;margin-top:13px;flex-wrap:wrap;line-height:1.25}.result-value strong{font-family:Arial,sans-serif;font-size:clamp(38px,4.6vw,62px);font-weight:500;letter-spacing:-.025em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.result-value>span{font-size:20px;color:#d3dfe6}.result-detail{color:#bed0db;font-size:14px;margin:7px 0 23px;min-height:22px}.result-breakdown{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #ffffff25;padding-top:19px;gap:24px}.result-breakdown>div+div{border-left:1px solid #ffffff25;padding-left:25px}.result-breakdown span{display:block;color:#b7c9d5;font-size:13px}.result-breakdown strong{display:block;font-family:Arial,Meiryo,sans-serif;font-weight:500;font-size:23px;margin-top:4px}.result-breakdown>div+div strong{color:#94ddd1}.chart-card,.conversion-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px 27px 20px;margin-top:21px}.chart-heading{display:flex;justify-content:space-between;align-items:center;gap:10px}.chart-heading p{font-size:12px;color:var(--muted);margin:3px 0 0}.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);white-space:nowrap}.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}.balance{background:var(--teal)}.principal{background:#b8c8d2}#chart{display:block;width:100%;height:auto;margin-top:15px;overflow:visible}.chart-bottom{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);border-top:1px solid #eef2f4;padding-top:12px}.insight{border-left:3px solid var(--teal);font-size:14px;color:#45616b;margin:22px 4px 0;padding:3px 0 3px 14px;line-height:1.9}.method{margin:26px 0 0;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}summary{cursor:pointer;padding:17px 0}.method div{background:#fff;border-radius:8px;padding:5px 22px 12px;line-height:1.9;overflow-wrap:anywhere}footer{display:flex;justify-content:space-between;font-size:12px;color:#788793;margin:30px 0 24px}.error{background:#fff0ed;border-radius:6px;color:#a03729;padding:12px;font-size:14px}.conversion-row{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding:23px 0;gap:12px}.conversion-row small{display:block;color:var(--muted);font-size:12px}.conversion-row strong{font-size:25px;color:var(--teal);font-family:Arial,sans-serif}.conversion-card p{color:var(--muted);font-size:14px}.invalid .result-value{opacity:.6}[hidden]{display:none!important}@media(min-width:1440px){.app{padding-top:12px}.intro{margin-top:40px}}@media(max-width:1000px){.app{padding:0 24px}.workspace{grid-template-columns:310px minmax(0,1fr);gap:18px}.input-panel{padding:23px 20px}.result-card{padding:25px}.result-breakdown strong{font-size:19px}.chart-card{padding:22px 18px}.legend{gap:8px}}@media(max-width:760px){.app{padding:0 18px}header{height:86px}.header-note{display:none}.intro{margin:25px 0 20px}.intro p{display:none}h1{font-size:25px}.modes{grid-template-columns:repeat(2,1fr);gap:6px;border:0;margin-bottom:18px}.modes button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:13px 5px;font-size:14px}.modes .active{border:1px solid var(--teal);border-radius:7px}.workspace{grid-template-columns:1fr}.input-panel{padding:21px}.output-panel{display:contents}.result-card{grid-row:1;padding:23px}.input-panel{grid-row:2}.result-value strong{font-size:44px}.chart-card,.conversion-card{margin-top:0}.insight{margin-top:2px}.chart-heading{flex-wrap:wrap}.method{margin-top:20px}.number-box input{font-size:24px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+
+/* Phone layout: legible controls, touch targets and a persistent result. */
+@media(max-width:760px){
+ .app{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+ header{height:78px}.brand{font-size:20px;letter-spacing:.01em;gap:11px}.brand>span:last-child{min-width:0}
+ .mark{flex-shrink:0;width:38px;height:43px;font-size:27px}
+ .modes{margin-top:18px;gap:8px}.modes button{min-height:48px;font-size:15px;padding:12px 6px}.modes span{margin-right:7px}
+ .workspace{display:flex;flex-direction:column;gap:16px}.input-panel{order:1;width:100%}.chart-card,.conversion-card{order:2;width:100%}.insight{order:3}.result-card{order:0;width:100%;position:sticky;top:6px;z-index:5;padding:16px 18px;box-shadow:0 8px 25px #142e4726}
+ .result-top{font-size:14px;align-items:flex-start}.result-tag{font-size:12px;padding:2px 7px}
+ .result-value{margin-top:8px;gap:8px}.result-value strong{font-size:clamp(28px,8vw,38px)}.result-value>span{font-size:16px}
+ .result-detail{font-size:12px;min-height:0;margin:5px 0 10px;line-height:1.6}
+ .result-breakdown{padding-top:9px;gap:12px}.result-breakdown>div+div{padding-left:12px}
+ .result-breakdown span{font-size:12px}.result-breakdown strong{font-size:17px;margin-top:2px;overflow-wrap:anywhere}
+ .input-panel{padding:20px 18px}.panel-head{gap:12px}.reset{min-height:44px;min-width:66px;padding:10px 3px;font-size:14px}
+ .muted{font-size:14px;line-height:1.8;margin-bottom:19px}label{font-size:15px}
+ .field{margin-bottom:20px}.number-box{min-height:52px}.number-box input{font-size:25px}.number-box span{font-size:15px}
+ select{font-size:16px;min-height:48px;padding:11px 8px;max-width:100%}
+ input[type=range]{appearance:none;-webkit-appearance:none;background:transparent;height:40px;margin:4px 0 0}
+ input[type=range]::-webkit-slider-runnable-track{height:6px;background:#d4e4e5;border-radius:8px}
+ input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:27px;height:27px;margin-top:-10.5px;background:var(--teal);border:3px solid white;border-radius:50%;box-shadow:0 1px 5px #142e4735}
+ input[type=range]::-moz-range-track{height:6px;background:#d4e4e5;border-radius:8px}
+ input[type=range]::-moz-range-thumb{width:21px;height:21px;background:var(--teal);border:3px solid white;border-radius:50%}
+ .range-label{font-size:12px}.auto-note{font-size:13px}.chart-card,.conversion-card{padding:20px 17px}
+ .chart-heading{gap:10px}.chart-heading p{font-size:13px}.legend{font-size:13px;gap:16px}
+ .chart-bottom{gap:12px;font-size:13px;flex-wrap:wrap}.insight{font-size:14px;margin:0 0 3px;padding-left:12px}
+ .conversion-row{align-items:flex-start;flex-wrap:wrap}.conversion-row strong{font-size:23px;overflow-wrap:anywhere}
+ .method{font-size:14px}.method summary{min-height:48px}.method div{padding:5px 15px 12px}
+ footer{gap:14px;flex-wrap:wrap;line-height:1.9;padding-bottom:env(safe-area-inset-bottom)}
+}
+@media(max-width:350px){
+ .app{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right))}
+ .brand{font-size:19px;gap:9px}.modes button{font-size:14px}.input-panel{padding:17px 14px}
+ .result-card{padding:14px}.result-breakdown strong{font-size:16px}.chart-card{padding:19px 12px}
+ .number-box{padding:6px 10px}.duration{gap:8px}
+}
+@media(max-width:760px) and (max-height:500px){.result-card{position:static}}
+
+
+/* Semantic palette: principal blue, returns teal, goals amber, losses red. */
+:root{--blue:#2566b3;--blue-wash:#edf5ff;--orange:#ac5b08;--orange-wash:#fff4e7;--teal:#087d73;--teal-wash:#e9f7f3;--red:#b83a3a;--accent:var(--blue);--accent-wash:var(--blue-wash)}
+body{background:#f3f7fb}
+body[data-mode="payment"]{--accent:var(--orange);--accent-wash:var(--orange-wash)}
+body[data-mode="yield"]{--accent:var(--teal);--accent-wash:var(--teal-wash)}
+.modes{border-bottom-color:#d7e4f0}
+.modes button[data-mode="future"]{--tab:#1d4265;--wash:#edf3fa}
+.modes button[data-mode="payment"]{--tab:var(--orange);--wash:var(--orange-wash)}
+.modes button[data-mode="yield"]{--tab:var(--teal);--wash:var(--teal-wash)}
+.modes button[data-mode="duration"]{--tab:var(--blue);--wash:var(--blue-wash)}
+.modes button{background:var(--wash);color:var(--tab);border:1px solid transparent;border-bottom:3px solid transparent;border-radius:10px 10px 0 0}
+.modes button:hover{background:var(--wash);border-color:var(--tab)}
+.modes button.active{background:var(--tab);color:#fff;border-color:var(--tab);box-shadow:0 4px 10px #142e4715}
+.modes span{opacity:1;padding:3px 5px;border-radius:4px;background:#ffffff85}
+.modes .active span{background:#ffffff20}
+.input-panel{border-top:4px solid var(--accent);box-shadow:0 5px 22px #142e4705}
+.panel-head h2{color:var(--accent)}
+.capital-field label{color:var(--blue)}.capital-field .number-box{background:var(--blue-wash);border-color:#bed6f2}.capital-field input{color:#1f5797}
+.target-field label{color:var(--orange)}.target-field .number-box{background:var(--orange-wash);border-color:#f1c893}.target-field input{color:#935008}
+.rate-field label{color:var(--teal)}.rate-field .number-box{background:var(--teal-wash);border-color:#abd9ce}.rate-field input{color:#07685f}
+.number-box:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-wash)}
+.result-card{background:linear-gradient(125deg,#173b5d,#142e47);border-top:5px solid var(--accent)}
+body[data-mode="payment"] .result-value strong,body[data-mode="payment"] .result-value>span{color:#ffd196}
+body[data-mode="yield"] .result-value strong{color:#91e7d4}
+body[data-mode="duration"] .result-value strong{color:#abd1ff}
+.result-breakdown{gap:14px}.result-breakdown>div{padding:10px 12px;background:#80b7ff12;border-radius:8px}
+.result-breakdown>div+div{border-left:none;padding:10px 12px;background:#63d5bd12}
+.result-breakdown>div:first-child span{color:#bad9ff}.result-breakdown>div:first-child strong{color:#9dc9ff}
+.result-breakdown>div+div span{color:#b7e8df}.result-breakdown>div+div strong{color:#91e7d4}
+.result-breakdown>div+div[data-sign="loss"]{background:#f9818115}
+.result-breakdown>div+div[data-sign="loss"] span,.result-breakdown>div+div[data-sign="loss"] strong{color:#ffaaaa}
+body[data-mode="duration"] .result-breakdown>div+div{background:#63d5bd12}
+#metric-b{transition:color .15s}
+.chart-card,.conversion-card{border-top:4px solid var(--accent);box-shadow:0 5px 22px #142e4705}
+.chart-card h2,.conversion-card h2{color:var(--accent)}
+.legend .principal{background:var(--blue)}.legend .balance{background:var(--teal)}
+body[data-loss="true"] .legend .balance{background:var(--red)}
+.conversion-row:first-of-type strong{color:var(--blue)}.conversion-row:last-of-type strong{color:var(--teal)}
+.insight{border-color:var(--accent);background:var(--accent-wash);color:#35516c;padding:12px 15px;border-radius:0 8px 8px 0}
+.error{background:#fff0ef;color:#a42f32;border-left:3px solid var(--red)}
+@media(max-width:760px){.modes button,.modes button.active{border-radius:9px}.result-breakdown{gap:10px}.result-breakdown>div,.result-breakdown>div+div{padding:8px 9px}.insight{padding:10px 12px}}
+@media(prefers-reduced-motion:reduce){#metric-b{transition:none}}
+
+
+/* Dimensional surfaces: raised controls and cards, recessed numeric fields. */
+body{background:radial-gradient(ellipse at 12% 0%,#ffffff 0%,#edf3f9 54%,#e6edf5 100%);background-attachment:fixed}
+header{border-bottom-color:#cbd9e7;box-shadow:0 1px 0 #ffffffb3}
+.mark{background:linear-gradient(140deg,#315f83 0%,#183e60 46%,#10273e 100%);border:1px solid #ffffff35;box-shadow:inset 0 1px 0 #ffffff65,inset 0 -2px 2px #081b3d55,0 4px 5px #122e4725,0 8px 15px #122e4712;text-shadow:0 2px 2px #081c4166}
+.input-panel,.chart-card,.conversion-card{background-image:linear-gradient(150deg,#fff 55%,#f7faff);border-right:1px solid #d3deeb;border-bottom:1px solid #c4d2e2;border-left:1px solid #d3deeb;box-shadow:inset 0 1px 0 #fff,0 2px 3px #183b5e0c,0 9px 18px #183b5e12,0 24px 42px #183b5e0a}
+.result-card{background:radial-gradient(ellipse at 4% 0%,#ffffff14,transparent 65%),linear-gradient(135deg,#244e70 0%,#173b5d 42%,#102a43 100%);border-right:1px solid #ffffff21;border-bottom:1px solid #0b2239;border-left:1px solid #ffffff21;box-shadow:inset 0 1px 0 #ffffff4d,inset 0 -3px 5px #061c3440,0 4px 6px #0e2c4429,0 16px 30px #0e2c4426,0 30px 50px #0e2c4410}
+.result-value strong{text-shadow:0 2px 3px #061b3f60}
+.result-tag{background:linear-gradient(#ffffff0d,#00000010);box-shadow:inset 0 1px 0 #ffffff16,0 2px 3px #00000015}
+.result-breakdown>div,.result-breakdown>div+div{border:1px solid #ffffff0c;box-shadow:inset 0 2px 4px #061c3b3b,inset 0 -1px 0 #ffffff12}
+.modes{border-bottom:none;padding-bottom:3px;gap:10px}
+.modes button{border-bottom-width:3px;border-radius:10px;background-image:linear-gradient(#ffffffaa,#ffffff05);box-shadow:inset 0 1px 0 #ffffff,0 2px 0 #c7d6e5,0 5px 9px #153c5e14;transition:box-shadow .15s,transform .15s}
+.modes button.active{background-image:linear-gradient(160deg,#ffffff21,transparent 60%,#00000012);border-bottom-color:#00000020;box-shadow:inset 0 1px 0 #ffffff60,inset 0 -1px 0 #00000018,0 3px 0 #15354f4a,0 8px 15px #173b5e25}
+.modes span{box-shadow:inset 0 1px 0 #ffffff50,0 1px 2px #102c4915}
+@media(hover:hover){.modes button:hover{transform:translateY(-1px);box-shadow:inset 0 1px 0 #ffffff66,0 3px 0 #173b5e30,0 9px 16px #173b5e22}}
+.modes button:active,.modes button.active:active{transform:translateY(2px);box-shadow:inset 0 2px 4px #102f4930,0 1px 1px #173b5e18}
+.number-box{background-image:linear-gradient(180deg,#193e6310 0%,#ffffff00 35%,#ffffff55 100%);box-shadow:inset 0 2px 4px #173b5e13,inset 0 -1px 0 #ffffffc0,0 1px 0 #ffffffa6;border-bottom-color:#ffffff}
+.number-box:focus-within{box-shadow:inset 0 2px 3px #173b5e14,0 0 0 3px var(--accent-wash),0 0 0 1px var(--accent)}
+select{background-image:linear-gradient(#ffffff,#f2f6fa);border-bottom-color:#c3d1df;box-shadow:inset 0 1px 0 #fff,0 2px 3px #173b5e0b}
+.reset{background:linear-gradient(#fff,#eef3f8);border:1px solid #d5e0eb;border-bottom-color:#bbcddd;border-radius:6px;padding:5px 10px;box-shadow:inset 0 1px 0 #fff,0 2px 3px #173b5e10}
+.reset:active{box-shadow:inset 0 2px 3px #173b5e15;transform:translateY(1px)}
+.legend i{box-shadow:inset 0 1px 0 #ffffff70,0 1px 2px #173b5e25}
+.insight{box-shadow:inset 0 1px 0 #fff,0 2px 4px #173b5e08}
+.method div{border:1px solid #dce6ef;box-shadow:inset 0 1px 0 #fff,0 4px 10px #173b5e08}
+@media(max-width:760px){
+ .result-card{box-shadow:inset 0 1px 0 #ffffff4d,inset 0 -2px 4px #061c3440,0 3px 5px #0e2c4425,0 9px 20px #0e2c4430}
+ .input-panel,.chart-card,.conversion-card{box-shadow:inset 0 1px 0 #fff,0 2px 3px #183b5e0a,0 8px 16px #183b5e13}
+ .modes{gap:9px}.reset{min-height:44px;padding:8px 10px}
+ input[type=range]::-webkit-slider-runnable-track{box-shadow:inset 0 1px 3px #163f652a,0 1px 0 #ffffff}
+ input[type=range]::-webkit-slider-thumb{background-image:linear-gradient(145deg,#ffffff35,transparent 55%,#00000012);box-shadow:inset 0 1px 0 #ffffff70,0 2px 4px #123f6740,0 5px 8px #123f6718}
+ input[type=range]::-moz-range-track{box-shadow:inset 0 1px 3px #163f652a,0 1px 0 #ffffff}
+ input[type=range]::-moz-range-thumb{background-image:linear-gradient(145deg,#ffffff35,transparent 55%,#00000012);box-shadow:inset 0 1px 0 #ffffff70,0 2px 4px #123f6740}
+}
+@media(prefers-reduced-motion:reduce){.modes button{transition:none}.modes button:hover,.modes button:active,.reset:active{transform:none}}
+
+
+/* Desktop canvas: 1440 × 810 (16:9); small screens retain the fluid layout. */
+.frame-shell{width:100%}
+@media(min-width:1100px) and (min-height:600px){
+ body{min-height:100vh;min-height:100dvh;display:grid;place-items:center;margin:0;padding:0}
+ .frame-shell{position:relative;width:calc(1440px * var(--frame-scale,1));height:calc(810px * var(--frame-scale,1));margin:20px}
+ .app{position:absolute;top:0;left:0;width:1440px;height:810px;max-width:none;padding:20px 26px;display:flex;flex-direction:column;transform:scale(var(--frame-scale,1));transform-origin:top left;background:linear-gradient(155deg,#f9fcff,#eef4fa);border:1px solid #d6e2ef;border-radius:22px;box-shadow:inset 0 1px 0 #fff,0 15px 42px #173b5e1c}
+ header{height:56px;flex-shrink:0}.brand{font-size:23px}.mark{width:40px;height:44px}
+ main{display:flex;flex-direction:column;flex:1;min-height:0}
+ .modes{flex-shrink:0;margin:14px 0 15px;padding-bottom:3px;gap:12px}
+ .modes button{font-size:17px;padding:11px 10px;min-height:49px}
+ .workspace{display:grid;grid-template-columns:460px minmax(0,1fr);gap:22px;align-items:stretch;flex:1;min-height:0}
+ .input-panel{padding:18px 20px;min-height:0;overflow:auto}
+ .panel-head h2{font-size:18px}.reset{min-height:34px;font-size:14px}
+ .muted{font-size:14px;margin:4px 0 17px;line-height:1.8}
+ #form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:19px 18px;align-items:start}
+ .field,.field.compact{margin:0}label{font-size:16px;margin-bottom:7px;line-height:1.5}
+ .number-box{min-height:49px;padding:5px 11px}.number-box input{font-size:27px}.number-box span{font-size:15px;margin-left:5px}
+ .duration{gap:8px}.duration .number-box{padding:5px 6px}.duration input{font-size:25px}.duration .number-box span{font-size:14px;margin-left:3px}
+ select{font-size:15px;min-height:45px;padding:10px 7px}
+ input[type=range]{height:6px;margin:15px 0 8px}.range-label{font-size:13px}
+ #error{grid-column:1/-1;margin:0}.auto-note{margin-top:19px;padding-top:12px;font-size:13px}
+ .output-panel{display:flex;flex-direction:column;gap:12px;min-height:0}
+ .result-card{position:relative;flex-shrink:0;padding:16px 24px}
+ .result-top{font-size:16px}.result-tag{font-size:12px}
+ .result-value{margin-top:7px;gap:11px}.result-value strong{font-size:48px;line-height:1.12}.result-value>span{font-size:18px}
+ .result-detail{font-size:14px;min-height:0;margin:5px 0 11px;line-height:1.5}
+ .result-breakdown{padding-top:10px;gap:15px}.result-breakdown span{font-size:13px}.result-breakdown strong{font-size:21px;margin-top:1px}.result-breakdown>div,.result-breakdown>div+div{padding:6px 11px}
+ .chart-card,.conversion-card{margin:0;padding:13px 20px;flex:1;min-height:0}
+ .chart-card{display:flex;flex-direction:column;gap:0}.chart-heading{flex-shrink:0}.chart-heading h2{font-size:17px}.chart-heading p{font-size:13px;margin-top:1px}.legend{font-size:13px}
+ #chart{flex:1;min-height:0;height:0;width:100%;margin:6px 0 4px}
+ .chart-bottom{flex-shrink:0;font-size:13px;padding-top:7px}
+ .conversion-card{overflow:auto}.conversion-card h2{font-size:18px}.conversion-row{padding:18px 0}.conversion-card p{font-size:14px;line-height:1.9}
+ .insight{flex-shrink:0;margin:0;padding:9px 13px;font-size:14px;line-height:1.7}
+ .method{flex-shrink:0;margin-top:8px;font-size:13px}.method summary{padding:5px 0;min-height:29px}
+ .method[open]{position:absolute;bottom:48px;left:26px;right:26px;z-index:20;background:#fff;border:1px solid #cbd9e8;border-top:4px solid var(--accent);border-radius:10px;padding:9px 16px;box-shadow:0 10px 40px #142e4740}
+ .method[open]>div{max-height:250px;overflow:auto;border:none;box-shadow:none;padding:0 12px}
+ footer{flex-shrink:0;margin:8px 0 0;padding:0;font-size:12px;line-height:1.5}
+}
+@media print{body{background:#fff}.frame-shell{width:100%;height:auto;margin:0}.app{position:relative;transform:none;box-shadow:none}}
+
+
+/* Withdrawal mode: cash-flow amber, assets blue, investment gains teal. */
+.modes{grid-template-columns:repeat(5,minmax(0,1fr))}
+.modes button[data-mode="withdraw"]{--tab:var(--orange);--wash:var(--orange-wash)}
+body[data-mode="withdraw"]{--accent:var(--orange);--accent-wash:var(--orange-wash)}
+body[data-mode="withdraw"] .result-value strong,body[data-mode="withdraw"] .result-value>span{color:#ffd196}
+body[data-mode="withdraw"] .result-breakdown>div:first-child{background:#ffa64b16}
+body[data-mode="withdraw"] .result-breakdown>div:first-child strong{color:#ffd196}
+body[data-mode="withdraw"] .result-breakdown>div:first-child span{color:#ffe1be}
+body[data-mode="withdraw"] .legend .balance{background:var(--orange)}
+@media(max-width:760px){.modes{grid-template-columns:repeat(2,minmax(0,1fr))}.modes button[data-mode="withdraw"]{grid-column:1/-1}}
+
+</style></head>
+<body><div class="frame-shell"><div class="app"><header><a class="brand" href="#"><span class="mark">∑</span><span>Financial Calculator</span></a></header>
+<main><nav class="modes" aria-label="計算の種類"><button type="button" data-mode="future" class="active" aria-pressed="true"><span>01</span>将来価値</button><button type="button" data-mode="payment" aria-pressed="false"><span>02</span>必要積立額</button><button type="button" data-mode="yield" aria-pressed="false"><span>03</span>必要利回り</button><button type="button" data-mode="duration" aria-pressed="false"><span>04</span>達成までの期間</button><button type="button" data-mode="withdraw" aria-pressed="false"><span>05</span>毎月の取崩額</button></nav>
+<div class="workspace"><section class="input-panel" aria-labelledby="input-title"><div class="panel-head"><h2 id="input-title">運用条件</h2><button class="reset" id="reset" type="button">リセット</button></div><p id="mode-description" class="muted">定期積立の将来価値（FV）を算出。</p>
+<form id="form" novalidate><div class="field capital-field" data-for="future payment yield withdraw duration"><label for="initial" id="initial-label">初期元本（PV）</label><div class="number-box"><input id="initial" type="text" inputmode="decimal" value="100" autocomplete="off"><span>万円</span></div></div>
+<div class="field capital-field" data-for="future yield duration"><label for="monthly">月額積立金（PMT）</label><div class="number-box"><input id="monthly" type="text" inputmode="decimal" value="3" autocomplete="off"><span>万円</span></div></div>
+<div class="field target-field" data-for="payment yield duration"><label for="target">目標資産額</label><div class="number-box"><input id="target" type="text" inputmode="decimal" value="1,000" autocomplete="off"><span>万円</span></div></div>
+<div class="field" data-for="future payment yield withdraw"><label for="years" id="period-label">運用期間</label><div class="duration"><div class="number-box"><input id="years" type="text" inputmode="numeric" value="20" autocomplete="off"><span>年</span></div><div class="number-box"><input id="months" aria-label="運用期間の端数月" type="text" inputmode="numeric" value="0" autocomplete="off"><span>か月</span></div></div><input type="range" id="year-range" aria-label="運用年数を調整" min="0" max="50" step="1" value="20"><div class="range-label"><span>0年</span><span>25年</span><span>50年</span></div></div>
+<div class="field rate-field" data-for="future payment duration withdraw"><label for="rate" id="rate-label">想定利回り（年率）</label><div class="number-box"><input id="rate" type="text" inputmode="decimal" value="3.00" autocomplete="off"><span>%</span></div><input type="range" id="rate-range" aria-label="利率を調整" min="0" max="15" step="0.1" value="3"><div class="range-label"><span>0%</span><span>7.5%</span><span>15%</span></div></div>
+<div class="field compact"><label for="convention">年利区分</label><select id="convention"><option value="nominal">名目年利（年利 ÷ 12）</option><option value="effective" selected>実効年利（複利を反映）</option></select></div>
+<div class="field compact" data-for="future payment yield withdraw duration"><label for="timing" id="timing-label">積立時点</label><select id="timing"><option value="end">期末積立（月末）</option><option value="begin">期首積立（月初）</option></select></div>
+<p id="error" class="error" role="alert" hidden></p></form><div class="auto-note"><span>↻</span> 条件変更に応じて自動再計算</div></section>
+<section class="output-panel" aria-label="計算結果"><div class="result-card"><div class="result-top"><span id="result-label">20年後の将来価値（FV）</span><span class="result-tag" id="result-tag">月次複利</span></div><div class="result-value" aria-live="polite" aria-atomic="true"><strong id="result-main">—</strong><span id="result-unit">万円</span></div><p id="result-detail" class="result-detail">—</p><div class="result-breakdown"><div><span id="metric-a-label">元本累計</span><strong id="metric-a">—</strong></div><div><span id="metric-b-label">運用損益</span><strong id="metric-b">—</strong></div></div></div>
+<div class="chart-card" id="chart-card"><div class="chart-heading"><div><h2>資産残高推移</h2><p id="chart-subtitle">元本累計と運用後残高を比較</p></div><div class="legend"><span><i class="balance"></i><span id="balance-legend">資産残高</span></span><span><i class="principal"></i><span id="principal-legend">元本累計</span></span></div></div><svg id="chart" viewBox="0 0 720 260" role="img" aria-label="期間ごとの元本と運用後の資産額"></svg><div class="chart-bottom"><span>運用期間</span><span id="chart-duration">20年間・240回の積立</span></div></div>
+<div class="insight" id="insight">—</div></section></div>
+<details class="method"><summary>計算前提・算定式</summary><div><p>利率が全期間一定で、月次複利で運用する試算です。税金・手数料・物価の変化は含みません。将来の運用成果を保証するものではありません。</p><p>初期元本をP、月額積立金をA、月利をi、積立回数をnとすると、期末積立の将来価値は P×(1+i)ⁿ + A×{((1+i)ⁿ−1)÷i} です。期首積立は積立部分に(1+i)を掛けます。月利0%では P+A×n です。</p><p>「名目年利」は月利=年利÷12。「実効年利」は月利=(1+年利)^(1/12)−1。必要利回りも選んだ年利区分で表示し、年利−99%〜100%の範囲で逆算します。</p><p>達成までの期間は、月末時点の資産残高が目標資産額以上になる最初の月を算出します。期首積立も各月の月末時点で判定します。算定上限は1,200か月（100年）です。初期元本が目標以上なら達成済み、到達できない条件と100年を超える条件は区別して表示します。</p><p>定額取崩しは、期間満了時の目標残高0円を前提に算出します。期末取崩額は P÷{[1−(1+i)^(−n)]÷i}、期首取崩額は期末取崩額÷(1+i)です。月利0%はP÷n。表示する月額は資産不足を避けるため1円単位で切り捨て、実際の期末残高も表示します。取崩総額＋期末残高−初期資産額を運用損益として表示します。利回りが毎月一定の試算であり、実際の値動きによる資産寿命の変化は含みません。</p><p>金額の入力単位は万円、0.0001万円=1円です。金額は0〜1,000,000万円、期間は1〜1,200か月、入力年利は−99%〜100%に対応します。必要積立額は目標を下回らないよう1円単位で切り上げます。他の表示値は丸めます。</p></div></details>
+</main><footer><span>Financial Calculator</span><span>月次複利・積立／取崩シミュレーション</span></footer></div></div><script>
+(function(root){
+'use strict';
+function monthlyRate(annual,convention){return convention==='effective'?Math.expm1(Math.log1p(annual)/12):annual/12;}
+function annualRate(monthly,convention){return convention==='effective'?Math.expm1(12*Math.log1p(monthly)):monthly*12;}
+function factors(i,n,timing){const growth=Math.exp(n*Math.log1p(i));const annuity=Math.abs(i)<1e-12?n:Math.expm1(n*Math.log1p(i))/i;return {growth,annuity:annuity*(timing==='begin'?1+i:1)};}
+function future(p,a,i,n,timing='end'){if(n===0)return p;const f=factors(i,n,timing);return p*f.growth+a*f.annuity;}
+function payment(p,target,i,n,timing='end'){const f=factors(i,n,timing);const raw=Math.max(0,(target-p*f.growth)/f.annuity);return Math.max(0,Math.ceil(raw-1e-8));}
+function solve(p,a,target,n,timing,convention){if(p===0&&a===0)throw Error('初期資金または毎月の積立額を入力してください。');let lo=-.99,hi=1;const value=r=>future(p,a,monthlyRate(r,convention),n,timing);const low=value(lo),high=value(hi);if(Math.abs(high-low)<1e-7)throw Error('この条件では利回りを一意に計算できません。期間や積立条件を見直してください。');if(target<low-1e-6||target>high+1e-6)throw Error('この目標額に必要な年利は、逆算の対応範囲（−99%〜100%）を外れます。');for(let k=0;k<120;k++){const mid=(lo+hi)/2;if(value(mid)<target)lo=mid;else hi=mid;}return(lo+hi)/2;}
+function withdrawal(p,i,n,timing='end'){const discount=Math.abs(i)<1e-12?n:-Math.expm1(-n*Math.log1p(i))/i;const raw=p/(discount*(timing==='begin'?1+i:1));return Math.max(0,Math.floor(raw));}
+function drawdownSchedule(p,w,i,n,timing='end'){const values=[p];let balance=p;for(let k=1;k<=n;k++){balance=timing==='begin'?(balance-w)*(1+i):balance*(1+i)-w;if(balance<0&&balance>=-Math.max(1,p)*1e-10)balance=0;if(balance<0)throw Error('取崩し中に資産残高が不足します。取崩条件を確認してください。');values.push(balance);}return values;}
+function timeToGoal(p,a,target,i,timing='end',limit=1200){
+if(p>=target)return {status:'reached',months:0};
+const contribution=a*(timing==='begin'?1+i:1);
+if(i*p+contribution<=0||(i<0&&target>=contribution/(-i)))return {status:'unreachable',months:null};
+const meets=n=>future(p,a,i,n,timing)>=target-1e-6;
+if(!meets(limit))return {status:'beyond',months:null};
+let lo=1,hi=limit;while(lo<hi){const mid=Math.floor((lo+hi)/2);if(meets(mid))hi=mid;else lo=mid+1;}
+return {status:'reached',months:lo};
+}
+const api={timeToGoal,monthlyRate,annualRate,factors,future,payment,solve,withdrawal,drawdownSchedule};root.Finance=api;if(typeof module!=='undefined')module.exports=api;
+})(typeof globalThis!=='undefined'?globalThis:window);
+
+</script><script>
+'use strict';
+const $=id=>document.getElementById(id),F=Finance;
+const defaults={initial:'100',monthly:'3',target:'1,000',years:'20',months:'0',rate:'3.00'};
+let mode='future';
+const fmt=(v,d=0)=>new Intl.NumberFormat('ja-JP',{minimumFractionDigits:d,maximumFractionDigits:d}).format(v);
+const yen=v=>fmt(Math.round(v))+' 円';
+const man=v=>fmt(v/10000,1)+' 万円';
+const pct=v=>fmt(v*100,4)+'%';
+function getNumber(id,min,max,integer=false){let s=$(id).value.replace(/[,，\s]/g,'').replace(/[０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-65248));if(!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(s))throw Error('空欄や文字を含む項目に、数値を入力してください。');let v=Number(s);if(!Number.isFinite(v)||v<min||v>max||(integer&&!Number.isInteger(v))){const label={initial:'初期元本',monthly:'月額積立金',target:'目標資産額',years:'年数',months:'端数月',rate:'利率'}[id];throw Error(label+'は'+fmt(min)+'〜'+fmt(max)+(integer?'の整数':'の数値')+'で入力してください。');}return v;}
+function set(id,value){$(id).textContent=value;}
+function period(n){const y=Math.floor(n/12),m=n%12;return(y?y+'年':'')+(m?m+'か月':'');}
+function draw(p,a,i,n,timing,drawdown=null){const samples=[];const step=Math.max(1,Math.ceil(n/100));for(let k=0;k<n;k+=step)samples.push({k,v:drawdown?drawdown[k]:F.future(p,a,i,k,timing),p:drawdown?Math.max(0,p-a*k):p+a*k});samples.push({k:n,v:drawdown?drawdown[n]:F.future(p,a,i,n,timing),p:drawdown?Math.max(0,p-a*n):p+a*n});const maximum=Math.max(...samples.map(x=>Math.max(x.v,x.p)),1);const pow=10**Math.floor(Math.log10(maximum));const top=Math.ceil(maximum/pow*2)/2*pow;const compact=window.matchMedia('(max-width:760px)').matches;const width=compact?420:720;const axisFont=compact?20:document.body.getAttribute('data-frame')==='wide'?16:12;$('chart').setAttribute('viewBox',`0 0 ${width} 260`);const left=compact?88:68,right=width-17,up=18,down=216;const X=k=>left+(right-left)*k/n,Y=v=>down-(down-up)*v/top;const line=key=>samples.map((s,j)=>(j?'L':'M')+X(s.k).toFixed(2)+','+Y(s[key]).toFixed(2)).join(' ');const loss=samples.at(-1).v<samples.at(-1).p-0.005;const chartColor=drawdown?'#ac5b08':loss?'#b83a3a':'#087d73';const path=line('v'),area=path+samples.slice().reverse().map(s=>' L'+X(s.k).toFixed(2)+','+Y(s.p).toFixed(2)).join('')+'Z';let grid='';for(let k=0;k<=4;k++){let v=top*k/4,y=Y(v);let label=top>=1e16?fmt(v/1e16,1)+'京':top>=1e12?fmt(v/1e12,1)+'兆':top>=1e8?fmt(v/1e8,1)+'億':fmt(v/10000,top<10000?2:0)+'万';grid+=`<line x1="${left}" y1="${y}" x2="${right}" y2="${y}" stroke="#e8edf0" stroke-dasharray="3 5"/><text x="${left-12}" y="${y+4}" text-anchor="end" fill="#7a8994" font-size="${axisFont}">${label}</text>`;}
+const ticks=Math.min(n,compact?2:4);for(let k=0;k<=ticks;k++){let m=Math.round(n*k/ticks);grid+=`<text x="${X(m)}" y="242" text-anchor="${k===0?'start':k===ticks?'end':'middle'}" fill="#7a8994" font-size="${axisFont}">${m%12===0?m/12+'年':m+'か月'}</text>`;}
+$('chart').innerHTML=`<title>${drawdown?"定額取崩しによる資産残高":"積立による資産残高"}。${period(n)}後の残高${yen(samples.at(-1).v)}。${drawdown?"青線は無利息で同額を取り崩した場合":"青線は元本累計"}。</title><defs><linearGradient id="fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${chartColor}" stop-opacity=".2"/><stop offset="100%" stop-color="${chartColor}" stop-opacity=".025"/></linearGradient></defs>${grid}<path d="${area}" fill="url(#fill)"/><path d="${line('p')}" fill="none" stroke="#2566b3" stroke-width="2" stroke-dasharray="5 5"/><path d="${path}" fill="none" stroke="${chartColor}" stroke-width="3" stroke-linecap="round"/><circle cx="${right}" cy="${Y(samples.at(-1).v)}" r="5" fill="${chartColor}" stroke="white" stroke-width="2"/>`;
+}
+function calculate(){try{$('chart-card').hidden=false;$('error').hidden=true;document.body.classList.remove('invalid');const convention=$('convention').value,timing=$('timing').value;
+if(mode==='duration'){
+const p=getNumber('initial',0,1000000)*10000,a=getNumber('monthly',0,1000000)*10000,target=getNumber('target',0,1000000)*10000;
+const i=F.monthlyRate(getNumber('rate',-99,100)/100,convention),outcome=F.timeToGoal(p,a,target,i,timing);
+set('result-label','目標達成までの期間（N）');set('result-unit','');set('result-tag','期間の逆算');set('metric-a-label','元本累計');set('metric-b-label','運用損益');
+document.body.setAttribute('data-loss','false');$('metric-b').parentElement.setAttribute('data-sign','gain');
+if(outcome.status!=='reached'){
+$('chart-card').hidden=true;$('chart').innerHTML='';set('chart-duration','—');set('metric-a','—');set('metric-b','—');
+set('result-main',outcome.status==='beyond'?'100年超':'達成不可');
+set('result-detail',outcome.status==='beyond'?'算定上限の1,200か月以内には到達しません。':'現在の積立額・利回りでは目標に到達しません。');
+set('insight','目標資産額 '+man(target)+' ／ 月額積立金 '+yen(a)+'。積立額・目標資産額・想定利回りを変更して比較できます。');return;
+}
+const n=outcome.months,total=F.future(p,a,i,n,timing),principal=p+a*n,gain=total-principal;
+set('result-main',n===0?'達成済み':period(n));set('result-detail',n===0?'初期元本が目標資産額以上です。':'到達時 '+yen(total)+' ／ '+fmt(n)+'か月');set('metric-a',man(principal));set('metric-b',man(Math.abs(gain)<.005?0:gain));
+document.body.setAttribute('data-loss',String(gain<-.005));$('metric-b').parentElement.setAttribute('data-sign',gain<-.005?'loss':'gain');
+set('chart-duration',n===0?'開始時点で達成':period(n)+'間・'+fmt(n)+'回の積立');$('chart-card').hidden=n===0;if(n>0)draw(p,a,i,n,timing);else $('chart').innerHTML='';
+set('insight',n===0?'目標資産額 '+man(target)+' に、運用開始時点で到達しています。':'目標資産額 '+man(target)+' ／ 月額積立金 '+yen(a)+'。月末残高で判定し、最初の到達月を表示します。');return;
+}
+if(mode==='withdraw'){const p=getNumber('initial',0,1000000)*10000;const n=getNumber('years',0,100,true)*12+getNumber('months',0,11,true);if(n<1||n>1200)throw Error('取崩期間は1か月〜100年にしてください。');const annual=getNumber('rate',-99,100)/100;const i=F.monthlyRate(annual,convention);const w=F.withdrawal(p,i,n,timing);const balances=F.drawdownSchedule(p,w,i,n,timing);const residual=balances[n],paid=w*n,gain=paid+residual-p;if(!Number.isFinite(residual)||Math.max(...balances,paid)>1e16)throw Error('計算結果が大きすぎます。期間または利回りを小さくしてください。');set('result-label','毎月の取崩額（PMT）');set('result-main',fmt(w));set('result-unit','円 / 月');set('result-tag','定額取崩し');set('result-detail',period(n)+'間 ／ 満了時残高 '+yen(residual));set('metric-a-label','取崩総額');set('metric-a',man(paid));set('metric-b-label','運用損益');set('metric-b',man(Math.abs(gain)<.005?0:gain));document.body.setAttribute('data-loss',String(gain<-.005));$('metric-b').parentElement.setAttribute('data-sign',gain<-.005?'loss':'gain');set('chart-duration',period(n)+'間・'+fmt(n)+'回の取崩し');set('insight',w===0&&p>0?'この条件での月額は1円未満のため、切り捨て後の取崩額は0円です。':'満了時残高0円を目安に、月額を1円単位で切り捨てて算出。利回りが毎月一定の定額取崩モデルです。');draw(p,w,i,n,timing,balances);return;}
+const p=getNumber('initial',0,1000000)*10000;let a=mode==='payment'?0:getNumber('monthly',0,1000000)*10000;const n=getNumber('years',0,100,true)*12+getNumber('months',0,11,true);if(n<1||n>1200)throw Error('運用期間は1か月〜100年にしてください。');const target=mode==='future'?0:getNumber('target',0,1000000)*10000;let annual=mode==='yield'?F.solve(p,a,target,n,timing,convention):getNumber('rate',-99,100)/100;const i=F.monthlyRate(annual,convention);if(mode==='payment')a=F.payment(p,target,i,n,timing);const total=F.future(p,a,i,n,timing),principal=p+a*n,gain=total-principal;if(!Number.isFinite(total)||total>1e16)throw Error('計算結果が大きすぎます。期間または利率を小さくしてください。');set('result-tag',mode==='yield'?'必要利回りの逆算':'月次複利');set('result-label',mode==='future'?period(n)+'後の将来価値（FV）':mode==='payment'?'必要積立額（PMT）':'必要利回り（年率）');set('result-main',mode==='future'?fmt(total/10000,1):mode==='payment'?fmt(a):fmt(annual*100,3));set('result-unit',mode==='future'?'万円':mode==='payment'?'円 / 月':'%');set('result-detail',mode==='future'?yen(total)+' ／ '+period(n)+'間の運用':mode==='payment'?period(n)+'後に '+man(total)+'（必要積立額は1円単位で切り上げ）':'月利 '+pct(i)+' ／ '+(convention==='nominal'?'名目年利':'実効年利'));set('metric-a-label','元本累計');set('metric-a',man(principal));set('metric-b-label',gain>=0?'運用損益':'運用損益');set('metric-b',man(gain));document.body.setAttribute('data-loss',String(gain<-.005));$('metric-b').parentElement.setAttribute('data-sign',gain<-.005?'loss':'gain');set('chart-duration',period(n)+'間・'+fmt(n)+'回の積立');draw(p,a,i,n,timing);
+let insight;if(mode==='future')insight=principal>0?'月額積立金 '+yen(a)+' ／ 運用期間 '+period(n)+' ／ 元本累計に対する将来価値の倍率 '+fmt(total/principal,2)+'倍。':'初期元本または月額積立金を入力すると、資産残高推移を表示します。';else if(mode==='payment')insight=a===0?'初期元本の複利運用により目標資産額に到達するため、追加積立は不要です。':'目標資産額 '+man(target)+' ／ 必要積立額 '+yen(a)+'（月額）。運用期間・想定利回りの変更により、必要積立額を比較できます。';else insight='必要利回りは目標達成に要する理論上の運用利回りです。特定の金融商品の期待収益率や実現可能性を示すものではありません。';set('insight',insight);
+}catch(e){$('error').hidden=false;set('error',e.message);document.body.classList.add('invalid');document.body.setAttribute('data-loss','false');$('metric-b').parentElement.setAttribute('data-sign','gain');set('result-main','—');set('result-unit','');set('result-detail','入力条件を確認してください');set('metric-a','—');set('metric-b','—');$('chart').innerHTML='';set('chart-duration','—');set('insight','条件を入力すると、計算結果が表示されます。');}}
+function changeMode(next){mode=next;document.body.setAttribute('data-mode',mode);document.body.setAttribute('data-loss','false');$('metric-b').parentElement.setAttribute('data-sign','gain');document.querySelectorAll('.modes [data-mode]').forEach(b=>{const yes=b.dataset.mode===mode;b.classList.toggle('active',yes);b.setAttribute('aria-pressed',String(yes));});document.querySelectorAll('[data-for]').forEach(e=>{e.hidden=!e.dataset.for.split(' ').includes(mode);});$('chart-card').hidden=false;set('mode-description',{future:'定期積立の将来価値（FV）を算出。',payment:'目標資産額から必要積立額（PMT）を算出。',yield:'元本・積立額・運用期間から必要利回りを逆算。',duration:'元本・月額積立金・目標資産額から達成期間（N）を逆算。',withdraw:'初期資産額から定額の月額取崩額（PMT）を算出。'}[mode]);updateModeLabels();updateRateLabel();calculate();}
+function updateModeLabels(){const withdrawing=mode==='withdraw';set('initial-label',withdrawing?'初期資産額（PV）':'初期元本（PV）');set('period-label',withdrawing?'取崩期間':'運用期間');set('timing-label',withdrawing?'取崩時点':'積立時点');$('timing').options[0].textContent=withdrawing?'期末取崩し（月末）':'期末積立（月末）';$('timing').options[1].textContent=withdrawing?'期首取崩し（月初）':'期首積立（月初）';set('balance-legend',withdrawing?'運用あり':'資産残高');set('principal-legend',withdrawing?'無利息の場合':'元本累計');set('chart-subtitle',withdrawing?'同じ取崩額での運用あり・無利息を比較':'元本累計と運用後残高を比較');$('year-range').setAttribute('aria-label',withdrawing?'取崩期間の年数を調整':'運用年数を調整');$('chart').setAttribute('aria-label',withdrawing?'期間ごとの定額取崩し後の資産残高':'期間ごとの元本と運用後の資産額');}
+function updateRateLabel(){set('rate-label','想定利回り（年率）');}
+document.querySelectorAll('.modes [data-mode]').forEach(b=>b.addEventListener('click',()=>changeMode(b.dataset.mode)));
+$('form').addEventListener('submit',e=>e.preventDefault());$('form').addEventListener('input',e=>{if(e.target.id==='year-range')$('years').value=e.target.value;if(e.target.id==='rate-range')$('rate').value=Number(e.target.value).toFixed(2);if(e.target.id==='years')$('year-range').value=e.target.value;if(e.target.id==='rate')$('rate-range').value=e.target.value;updateRateLabel();calculate();});
+$('reset').addEventListener('click',()=>{Object.entries(defaults).forEach(([id,v])=>$(id).value=v);$('year-range').value=20;$('rate-range').value=3;$('convention').value='effective';$('timing').value='end';updateRateLabel();calculate();});
+document.querySelectorAll('input[type=text]').forEach(input=>input.addEventListener('blur',()=>{const v=input.value.replace(/[,，\s]/g,'').replace(/[０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-65248));if(v.trim()!==''&&Number.isFinite(Number(v))){input.value=input.id==='rate'?Number(v).toFixed(2):Number(v).toLocaleString('ja-JP',{maximumFractionDigits:8});if(input.id==='rate'){$('rate-range').value=input.value;calculate();}}}));
+function fitFrame(){const wide=window.matchMedia('(min-width:1100px) and (min-height:600px)').matches;document.body.setAttribute('data-frame',wide?'wide':'fluid');if(wide){const scale=Math.min((window.innerWidth-40)/1440,(window.innerHeight-40)/810,1.5);document.documentElement.style.setProperty('--frame-scale',String(scale));}else document.documentElement.style.removeProperty('--frame-scale');}
+window.addEventListener('resize',()=>{fitFrame();calculate();});
+fitFrame();
+changeMode('future');
+
+</script></body></html>
