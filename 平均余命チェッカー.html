@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F6F6F3">
+<title>平均余命チェッカー</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap">
+<style>
+/* Layout: one narrow column — 入力 → 結果 → 棒グラフ → 表 → 出典。スマホ縦で上から順に読む */
+:root {
+  --bg: #F6F6F3;
+  --surface: #FFFFFF;
+  --fg: #22252A;
+  --muted: #5E6570;
+  --line: #E2E0DA;
+  --male: #3F6E9E;
+  --female: #BF5A36;
+  --bar-soft: #D9DCE0;
+  --font-display: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --font-body: "BIZ UDPGothic", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15171A; --surface: #1E2125; --fg: #ECEDEF; --muted: #A4AAB2; --line: #33373D;
+    --male: #82A9D4; --female: #E39072; --bar-soft: #3A3F46; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15171A; --surface: #1E2125; --fg: #ECEDEF; --muted: #A4AAB2; --line: #33373D;
+  --male: #82A9D4; --female: #E39072; --bar-soft: #3A3F46; color-scheme: dark;
+}
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.7;
+}
+.app {
+  --accent: var(--male);
+  max-width: 760px; margin: 0 auto;
+  padding-block: 20px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 20px;
+}
+.app[data-sex="f"] { --accent: var(--female); }
+
+header h1 {
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(26px, 6vw, 34px); line-height: 1.25; margin: 0;
+  text-wrap: balance;
+}
+header p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+
+.panel { background: var(--surface); border-radius: 14px; padding: 20px; }
+
+/* 入力 */
+.inputs { display: grid; gap: 18px; }
+.label { font-size: 14px; color: var(--muted); font-weight: 700; margin-bottom: 8px; letter-spacing: .04em; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.seg button {
+  font: inherit; font-weight: 700; font-size: 18px; padding: 12px 0; border-radius: 10px;
+  border: 2px solid var(--line); background: transparent; color: var(--fg); cursor: pointer;
+}
+.seg button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--surface); }
+.seg button:focus-visible, .step:focus-visible, #age:focus-visible, #ageRange:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.age-row { display: flex; align-items: center; gap: 10px; }
+.step {
+  width: 52px; height: 52px; flex: none; border-radius: 10px; border: 2px solid var(--line);
+  background: transparent; color: var(--fg); font-size: 26px; font-weight: 700; cursor: pointer; line-height: 1;
+}
+.age-box { display: flex; align-items: baseline; gap: 6px; flex: 1; justify-content: center; }
+#age {
+  width: 3.4ch; font: inherit; font-family: var(--font-display); font-weight: 900; font-size: 40px;
+  text-align: center; border: none; border-bottom: 2px solid var(--line); background: transparent; color: var(--fg);
+  font-variant-numeric: tabular-nums; padding: 0;
+}
+.age-box span { font-size: 18px; font-weight: 700; }
+#ageRange { width: 100%; accent-color: var(--accent); margin-top: 6px; }
+
+/* 結果 */
+.result { display: grid; gap: 14px; }
+.big { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.big .pre { font-size: 18px; font-weight: 700; width: 100%; }
+.big .nowrap { white-space: nowrap; }
+.big .num {
+  font-family: var(--font-display); font-weight: 900; font-size: clamp(48px, 13vw, 64px);
+  line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums;
+}
+.big .unit { font-size: 22px; font-weight: 700; }
+.big .ym { width: 100%; color: var(--muted); font-size: 15px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.fact { border-top: 2px solid var(--line); padding-top: 8px; }
+.fact .k { font-size: 13px; color: var(--muted); }
+.fact .v { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.fact .s { font-size: 13px; color: var(--muted); }
+
+/* グラフ */
+.chart-head h2, .table-wrap summary { font-family: var(--font-display); font-weight: 700; font-size: 19px; margin: 0; }
+.chart-head p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+.readout {
+  margin-top: 12px; padding: 10px 12px; border-radius: 10px; background: var(--bg);
+  font-size: 15px; min-height: 3.2em; font-variant-numeric: tabular-nums;
+}
+.readout b { color: var(--accent); font-size: 18px; }
+#chart { width: 100%; margin-top: 8px; touch-action: pan-y; }
+#chart svg { display: block; width: 100%; height: auto; }
+#chart text { fill: var(--muted); font-family: var(--font-body); font-size: 11px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); margin-top: 6px; }
+.legend i { display: inline-block; width: 22px; height: 0; border-top: 2px dashed var(--fg); vertical-align: middle; margin-right: 6px; }
+.legend i.half { border-top: 2px dotted var(--muted); }
+
+/* 表 */
+.table-wrap summary { cursor: pointer; }
+.table-scroll { overflow-x: auto; margin-top: 12px; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; font-size: 15px; }
+th, td { padding: 6px 8px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font-size: 13px; color: var(--muted); font-weight: 700; }
+th:first-child, td:first-child { text-align: left; }
+tr.mark td { font-weight: 700; color: var(--accent); }
+
+.note { font-size: 13px; color: var(--muted); line-height: 1.7; }
+.note p { margin: 0 0 6px; }
+.note a { color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+<style>[hidden]{display:none!important} body{margin:0} :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+</head>
+<body>
+
+<div class="app" id="app" data-sex="m">
+  <header>
+    <h1>平均余命チェッカー</h1>
+    <p>年齢と性別を選ぶと、あと平均何年生きるかと、100歳まで毎年何％の人が生きているかがわかります。</p>
+  </header>
+
+  <section class="panel inputs" aria-label="入力">
+    <div>
+      <div class="label">性別</div>
+      <div class="seg" role="group" aria-label="性別">
+        <button type="button" id="btnM" aria-pressed="true">男性</button>
+        <button type="button" id="btnF" aria-pressed="false">女性</button>
+      </div>
+    </div>
+    <div>
+      <div class="label"><label for="age">年齢（満年齢）</label></div>
+      <div class="age-row">
+        <button type="button" class="step" id="minus" aria-label="1歳減らす">−</button>
+        <div class="age-box"><input id="age" type="number" inputmode="numeric" min="0" max="105" value="65"><span>歳</span></div>
+        <button type="button" class="step" id="plus" aria-label="1歳増やす">＋</button>
+      </div>
+      <input id="ageRange" type="range" min="0" max="105" value="65" aria-label="年齢スライダー">
+    </div>
+  </section>
+
+  <section class="panel result" aria-live="polite">
+    <div class="big">
+      <span class="pre" id="who">65歳の男性は</span>
+      <span class="nowrap"><span class="unit">あと</span> <span class="num" id="exNum">19.68</span> <span class="unit">年</span></span>
+      <span class="ym" id="exYM">およそ19年8か月。平均すると 約84.7歳 まで生きる計算です。</span>
+    </div>
+    <div class="facts">
+      <div class="fact">
+        <div class="k">平均余命が尽きる時点で、まだ生きている人</div>
+        <div class="v" id="aliveAtEnd">—</div>
+        <div class="s" id="aliveAtEndS"></div>
+      </div>
+      <div class="fact">
+        <div class="k">100歳まで生きている人</div>
+        <div class="v" id="alive100">—</div>
+        <div class="s" id="alive100S"></div>
+      </div>
+      <div class="fact">
+        <div class="k">ちょうど半分の人が生きている年齢</div>
+        <div class="v" id="median">—</div>
+        <div class="s" id="medianS"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="chart-head">
+      <h2>毎年、何％の人が生きているか（100歳まで）</h2>
+      <p id="chartSub">今の年齢の人を100％として、100歳までの各年齢</p>
+    </div>
+    <div class="readout" id="readout">棒をタップすると、その年齢の数字が出ます。</div>
+    <div id="chart"></div>
+    <div class="legend">
+      <span><i></i>平均余命が尽きる時点（その後の棒は薄い色）</span>
+      <span><i class="half"></i>50％（半分の人が生きている）</span>
+    </div>
+  </section>
+
+  <details class="panel table-wrap">
+    <summary>年ごとの数字を表で見る</summary>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>年齢</th><th>何年後</th><th>生きている割合</th><th>100人中</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </details>
+
+  <footer class="note">
+    <p>出典：厚生労働省「令和7(2025)年簡易生命表」（2026年7月24日公表）。男性の平均寿命81.35年、女性87.33年。</p>
+    <p>2025年の死亡状況がこの先も変わらないと仮定した統計上の平均値で、ひとりひとりの寿命を予測するものではありません。グラフは100歳まで（100歳以上の方は生命表の上限の105歳まで）です。</p>
+    <p><a href="https://www.mhlw.go.jp/toukei/saikin/hw/life/life25/index.html" target="_blank" rel="noopener">厚生労働省の公表ページ</a></p>
+  </footer>
+</div>
+
+<script>
+// 令和7(2025)年簡易生命表：0〜105歳の生存数 lx（10万人あたり）と平均余命 ex
+const DATA = {
+  m: {
+    lx: [100000,99800,99770,99748,99733,99721,99712,99704,99697,99691,99686,99680,99673,99664,99652,99637,99618,99597,99571,99540,99504,99463,99419,99372,99325,99278,99231,99185,99138,99089,99038,98987,98934,98878,98818,98754,98687,98617,98543,98463,98377,98284,98184,98075,97957,97829,97690,97538,97372,97188,96984,96757,96506,96232,95932,95603,95241,94843,94403,93918,93387,92811,92183,91495,90733,89892,88971,87973,86896,85729,84453,83051,81511,79824,77986,75991,73836,71531,69079,66461,63651,60631,57407,54005,50468,46795,42972,39003,34918,30790,26705,22749,19076,15686,12616,9897,7546,5572,3968,2712,1770,1095,639,348,176,82],
+    ex: [81.35,80.51,79.53,78.55,77.56,76.57,75.58,74.58,73.59,72.59,71.60,70.60,69.61,68.61,67.62,66.63,65.64,64.66,63.67,62.69,61.72,60.74,59.77,58.80,57.82,56.85,55.88,54.90,53.93,52.96,51.98,51.01,50.04,49.06,48.09,47.12,46.16,45.19,44.22,43.26,42.29,41.33,40.38,39.42,38.47,37.52,36.57,35.63,34.69,33.75,32.82,31.90,30.98,30.06,29.16,28.26,27.36,26.47,25.59,24.72,23.86,23.01,22.16,21.32,20.50,19.68,18.88,18.09,17.31,16.54,15.78,15.04,14.31,13.60,12.91,12.24,11.58,10.94,10.31,9.69,9.10,8.53,7.98,7.45,6.94,6.44,5.97,5.53,5.11,4.73,4.38,4.06,3.74,3.45,3.16,2.90,2.65,2.42,2.20,2.00,1.81,1.64,1.48,1.34,1.21,1.08]
+  },
+  f: {
+    lx: [100000,99827,99800,99782,99771,99763,99757,99750,99744,99738,99731,99725,99718,99710,99699,99685,99668,99649,99626,99601,99574,99544,99514,99486,99459,99432,99404,99376,99349,99323,99297,99269,99240,99209,99175,99138,99099,99056,99011,98964,98913,98858,98799,98735,98665,98588,98504,98413,98314,98207,98088,97957,97811,97651,97479,97293,97095,96884,96658,96416,96157,95880,95581,95260,94912,94533,94119,93673,93190,92664,92083,91440,90733,89956,89100,88149,87087,85906,84596,83140,81514,79692,77646,75351,72795,69950,66786,63284,59444,55282,50819,46087,41153,36124,31136,26352,21769,17482,13575,10130,7212,4856,3060,1783,947,451],
+    ex: [87.33,86.48,85.51,84.52,83.53,82.54,81.54,80.55,79.55,78.56,77.56,76.57,75.57,74.58,73.59,72.60,71.61,70.62,69.64,68.66,67.67,66.69,65.71,64.73,63.75,62.77,61.78,60.80,59.82,58.83,57.85,56.87,55.88,54.90,53.92,52.94,51.96,50.98,50.00,49.03,48.05,47.08,46.11,45.14,44.17,43.20,42.24,41.28,40.32,39.36,38.41,37.46,36.51,35.57,34.64,33.70,32.77,31.84,30.91,29.99,29.07,28.15,27.24,26.33,25.42,24.52,23.63,22.74,21.85,20.97,20.10,19.24,18.39,17.54,16.70,15.88,15.07,14.27,13.48,12.71,11.95,11.21,10.49,9.80,9.12,8.47,7.85,7.26,6.69,6.16,5.66,5.18,4.75,4.34,3.95,3.58,3.23,2.90,2.59,2.31,2.05,1.81,1.59,1.39,1.22,1.06]
+  }
+};
+const MAX = 105;
+const state = { sex: "m", age: 65, sel: null };
+
+const $ = id => document.getElementById(id);
+const app = $("app");
+
+function lxAt(sex, t) { // 年齢 t（小数可）の生存数を直線補間
+  const lx = DATA[sex].lx;
+  if (t >= MAX) return lx[MAX];
+  const a = Math.floor(t), f = t - a;
+  return lx[a] + (lx[a + 1] - lx[a]) * f;
+}
+const pct = v => (v * 100).toFixed(1) + "％";
+
+function compute() {
+  const { sex, age } = state;
+  const lx = DATA[sex].lx, ex = DATA[sex].ex[age];
+  const base = lx[age];
+  const endAge = age + ex;
+  const lastAge = age >= 100 ? MAX : 100;
+  const rows = [];
+  for (let a = age; a <= lastAge; a++) rows.push({ age: a, k: a - age, p: lx[a] / base });
+  const aliveEnd = lxAt(sex, endAge) / base;
+  let median = null;
+  for (let a = age; a < MAX; a++) {
+    const p0 = lx[a] / base, p1 = lx[a + 1] / base;
+    if (p0 >= 0.5 && p1 < 0.5) { median = a + (p0 - 0.5) / (p0 - p1); break; }
+  }
+  const endIdx = Math.min(rows.length - 1, Math.ceil(ex));
+  const alive100 = age <= 100 ? lx[100] / base : null;
+  return { ex, endAge, lastAge, rows, aliveEnd, median, endIdx, alive100 };
+}
+
+function render() {
+  const { sex, age } = state;
+  const r = compute();
+  const sexName = sex === "m" ? "男性" : "女性";
+  app.dataset.sex = sex;
+  $("btnM").setAttribute("aria-pressed", sex === "m");
+  $("btnF").setAttribute("aria-pressed", sex === "f");
+  $("age").value = age; $("ageRange").value = age;
+
+  $("who").textContent = `${age}歳の${sexName}は`;
+  $("exNum").textContent = r.ex.toFixed(2);
+  let y = Math.floor(r.ex), m = Math.round((r.ex - y) * 12);
+  if (m === 12) { y++; m = 0; }
+  $("exYM").textContent = `およそ${y}年${m ? m + "か月" : ""}。平均すると 約${r.endAge.toFixed(1)}歳 まで生きる計算です。`;
+
+  if (r.endAge <= MAX) {
+    $("aliveAtEnd").textContent = pct(r.aliveEnd);
+    $("aliveAtEndS").textContent = `約${r.endAge.toFixed(1)}歳の時点で、100人中 約${Math.round(r.aliveEnd * 100)}人`;
+  } else {
+    $("aliveAtEnd").textContent = "—";
+    $("aliveAtEndS").textContent = "生命表の範囲（105歳）を超えるため計算できません";
+  }
+  if (r.median !== null) {
+    $("median").textContent = `約${r.median.toFixed(1)}歳`;
+    $("medianS").textContent = `平均より ${(r.median - r.endAge).toFixed(1)}年 ${r.median >= r.endAge ? "長い" : "短い"}`;
+  } else {
+    $("median").textContent = "—";
+    $("medianS").textContent = "生命表の範囲（105歳）を超えるため計算できません";
+  }
+
+  $("chartSub").textContent = `${age}歳の${sexName}を100％として、${r.lastAge}歳までの各年齢`;
+  if (r.alive100 !== null) {
+    $("alive100").textContent = pct(r.alive100);
+    $("alive100S").textContent = `100人中 約${Math.round(r.alive100 * 100)}人${r.alive100 < 0.005 ? "（1人未満）" : ""}`;
+  } else {
+    $("alive100").textContent = "—";
+    $("alive100S").textContent = "すでに100歳を超えています";
+  }
+
+  const tb = $("tbody");
+  tb.innerHTML = r.rows.map((row, i) =>
+    `<tr class="${i === r.endIdx ? "mark" : ""}"><td>${row.age}歳</td><td>${row.k}年後</td><td>${pct(row.p)}</td><td>約${Math.round(row.p * 100)}人</td></tr>`
+  ).join("");
+
+  if (state.sel === null || state.sel >= r.rows.length) state.sel = r.endIdx;
+  drawChart(r);
+  showReadout(r);
+}
+
+function showReadout(r) {
+  const row = r.rows[state.sel];
+  $("readout").innerHTML = `<b>${row.age}歳</b>（${row.k}年後）：生きている人 <b>${pct(row.p)}</b>　100人中 約${Math.round(row.p * 100)}人`;
+}
+
+function drawChart(r) {
+  const box = $("chart");
+  const W = Math.max(280, box.clientWidth || 600);
+  const H = Math.round(Math.min(300, Math.max(220, W * 0.5)));
+  const L = 40, R = 8, T = 10, B = 26;
+  const pw = W - L - R, ph = H - T - B;
+  const n = r.rows.length;
+  const band = pw / n;
+  const bw = Math.max(1, band * (n > 40 ? 0.8 : 0.7));
+  const yOf = p => T + ph * (1 - p);
+  const xOf = i => L + band * i + band / 2;
+  const NS = "http://www.w3.org/2000/svg";
+  let s = `<svg xmlns="${NS}" viewBox="0 0 ${W} ${H}" role="img" aria-label="年齢ごとの生存割合の棒グラフ">`;
+  // 目盛り
+  [0, 0.25, 0.5, 0.75, 1].forEach(p => {
+    const y = yOf(p);
+    const dash = p === 0.5 ? ' stroke-dasharray="2 3" stroke="var(--muted)" stroke-width="1.5"' : ' stroke="var(--line)" stroke-width="1"';
+    s += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}"${dash} fill="none"/>`;
+    s += `<text x="${L - 6}" y="${y + 4}" text-anchor="end">${p * 100}%</text>`;
+  });
+  // 棒
+  r.rows.forEach((row, i) => {
+    const x = xOf(i) - bw / 2, y = yOf(row.p);
+    const sel = i === state.sel;
+    s += `<rect x="${x}" y="${y}" width="${bw}" height="${yOf(0) - y}" fill="var(--accent)" opacity="${sel ? 1 : (i <= r.endIdx ? 0.62 : 0.28)}" rx="${bw > 6 ? 2 : 0}"/>`;
+    if (sel) s += `<rect x="${x}" y="${y}" width="${bw}" height="${yOf(0) - y}" fill="none" stroke="var(--fg)" stroke-width="1.5"/>`;
+  });
+  // 平均余命が尽きる時点（点線）
+  const xe = L + band * (r.ex + 0.5);
+  if (xe <= W - R) s += `<line x1="${xe}" x2="${xe}" y1="${T}" y2="${yOf(0)}" stroke="var(--fg)" stroke-width="1.5" stroke-dasharray="5 4" fill="none"/>`;
+  // 横軸ラベル（重ならない間隔を選ぶ）
+  const step = [1, 2, 5, 10].find(st => band * st >= 30) || 10;
+  r.rows.forEach((row, i) => {
+    if (row.age % step === 0 || (n <= 3)) s += `<text x="${xOf(i)}" y="${H - 8}" text-anchor="middle">${row.age}</text>`;
+  });
+  s += `<line x1="${L}" x2="${W - R}" y1="${yOf(0)}" y2="${yOf(0)}" stroke="var(--muted)" stroke-width="1" fill="none"/>`;
+  // タップ用の透明な当たり判定
+  r.rows.forEach((row, i) => {
+    s += `<rect data-i="${i}" x="${L + band * i}" y="${T}" width="${band}" height="${ph}" fill="transparent" style="cursor:pointer"/>`;
+  });
+  s += `</svg>`;
+  box.innerHTML = s;
+  box.querySelectorAll("rect[data-i]").forEach(el => {
+    const pick = () => { state.sel = +el.dataset.i; drawChart(r); showReadout(r); };
+    el.addEventListener("click", pick);
+    el.addEventListener("mouseenter", pick);
+  });
+}
+
+function setAge(v) {
+  v = Math.round(Number(v));
+  if (!isFinite(v)) return;
+  state.age = Math.max(0, Math.min(MAX, v));
+  state.sel = null;
+  render();
+}
+$("btnM").addEventListener("click", () => { state.sex = "m"; state.sel = null; render(); });
+$("btnF").addEventListener("click", () => { state.sex = "f"; state.sel = null; render(); });
+$("minus").addEventListener("click", () => setAge(state.age - 1));
+$("plus").addEventListener("click", () => setAge(state.age + 1));
+$("ageRange").addEventListener("input", e => setAge(e.target.value));
+$("age").addEventListener("change", e => setAge(e.target.value));
+$("age").addEventListener("keydown", e => { if (e.key === "Enter") setAge(e.target.value); });
+
+let rt;
+window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(render, 120); });
+render();
+</script>
+
+</body>
+</html>
