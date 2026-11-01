@@ -24,6 +24,7 @@
   --warn:#F2847B; --ok:#7CC79A; color-scheme:dark}
 
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.7;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
 .wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
@@ -71,6 +72,16 @@ h2{font-family:var(--f-display);font-weight:600;font-size:1.25rem;margin:0 0 4px
 .check{display:flex;gap:10px;align-items:flex-start;font-size:.92rem;cursor:pointer}
 .check input{width:22px;height:22px;margin-top:2px;accent-color:var(--accent);flex:none}
 .hint{font-size:.82rem;color:var(--muted);margin:0;line-height:1.55}
+.homebox{display:flex;flex-direction:column;gap:14px;padding:14px;border-radius:12px;background:var(--bg)}
+.homebox .money{background:var(--surface)}
+.calcbox{background:var(--blue-soft);border-radius:10px;padding:12px 14px;font-size:.92rem;display:flex;flex-direction:column;gap:6px}
+.calcbox .line{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.calcbox .line span{min-width:0}
+.calcbox .line span small{display:block;color:var(--muted);font-size:.8rem}
+.calcbox .line b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.calcbox .line.minus b{color:var(--blue)}
+.calcbox .line.total{border-top:1px solid var(--line);padding-top:8px;margin-top:2px}
+.calcbox .line.total b{color:var(--accent);font-size:1.25rem}
 
 .nav{display:flex;gap:10px}
 .btn{font:inherit;font-weight:700;font-size:1.05rem;border-radius:12px;padding:14px 18px;cursor:pointer;min-height:54px;flex:1}
@@ -185,8 +196,15 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-o
     <p class="grp-title">プラスの財産</p>
     <div class="field"><label for="a-cash">預貯金・現金</label><div class="money"><input id="a-cash" inputmode="numeric" value="0"><span>万円</span></div></div>
     <div class="field"><label for="a-sec">株式・投資信託など</label><div class="money"><input id="a-sec" inputmode="numeric" value="0"><span>万円</span></div></div>
-    <div class="field"><label for="a-home">自宅の土地</label><div class="money"><input id="a-home" inputmode="numeric" value="0"><span>万円</span></div>
-      <label class="check" for="a-small"><input type="checkbox" id="a-small"><span>配偶者か同居の家族が引き継ぐ（評価が80%下がる特例を使う）<br><small class="hint">330㎡までの宅地が対象です</small></span></label>
+    <div class="field"><label for="a-own">自社株（未上場株）<small>オーナー会社の株式など</small></label><div class="money"><input id="a-own" inputmode="numeric" value="0"><span>万円</span></div>
+      <p class="hint">税理士・顧問の先生が出した相続税評価額を入れてください。わからなければ、会社の純資産額 × 持株割合がおおよその目安です。</p></div>
+
+    <div class="homebox">
+      <div class="field"><label for="a-home">自宅の土地の評価額<small>路線価 × 面積など</small></label><div class="money"><input id="a-home" inputmode="numeric" value="0"><span>万円</span></div></div>
+      <div class="field"><label for="a-area">自宅の土地の広さ<small>登記簿・固定資産税の通知書の面積</small></label><div class="money"><input id="a-area" inputmode="decimal" value="0"><span>㎡</span></div>
+        <p class="hint" id="tsubo"></p></div>
+      <label class="check" for="a-small"><input type="checkbox" id="a-small"><span>配偶者か同居の家族が引き継ぐ<br><small class="hint">小規模宅地等の特例：330㎡までの部分の評価が80%下がります</small></span></label>
+      <div class="calcbox" id="homeCalc" hidden></div>
     </div>
     <div class="field"><label for="a-land">その他の土地<small>貸している土地・畑など</small></label><div class="money"><input id="a-land" inputmode="numeric" value="0"><span>万円</span></div></div>
     <div class="field"><label for="a-bld">建物<small>自宅・アパートなど</small></label><div class="money"><input id="a-bld" inputmode="numeric" value="0"><span>万円</span></div></div>
@@ -282,13 +300,46 @@ document.querySelectorAll('.count button').forEach(b=>b.addEventListener('click'
 }));
 
 /* ---------- 金額入力（カンマ付け） ---------- */
-const ids = ["cash","sec","home","land","bld","ins","ret","oth","debt","fun"];
+const ids = ["cash","sec","own","home","area","land","bld","ins","ret","oth","debt","fun"];
 function val(id){ const v = $("a-"+id).value.replace(/[^\d.]/g,""); return v ? parseFloat(v) : 0; }
 ids.forEach(id=>{
   const el = $("a-"+id);
   el.addEventListener('focus', ()=>{ el.value = el.value.replace(/,/g,""); el.select(); });
-  el.addEventListener('blur', ()=>{ const n = val(id); el.value = n.toLocaleString("ja-JP"); });
+  el.addEventListener('blur', ()=>{ const n = val(id); el.value = n.toLocaleString("ja-JP"); updateHome(); });
 });
+
+/* ---------- 自宅の土地：小規模宅地等の特例 ---------- */
+const LIMIT = 330; // 特定居住用宅地の上限面積（㎡）
+function homeCalc(){
+  const home = val("home")*MAN, area = val("area"), small = $("a-small").checked;
+  const cover = area>0 ? Math.min(area, LIMIT) : 0;
+  const ratio = area>0 ? cover/area : 1;      // 広さ未入力なら全体を対象とみなす
+  const target = home*ratio;                   // 特例の対象になる部分の評価
+  const reduce = small ? target*0.8 : 0;
+  return {home, area, cover, ratio, target, reduce, evalv: home-reduce, small};
+}
+function updateHome(){
+  const area = val("area");
+  $("tsubo").textContent = area>0 ? `約${(area/3.30579).toFixed(1)}坪` + (area>LIMIT ? `（特例の対象は${LIMIT}㎡まで）` : "") : "";
+  const h = homeCalc(), box = $("homeCalc");
+  if (!h.home){ box.hidden = true; return; }
+  box.hidden = false;
+  if (!h.small){
+    box.innerHTML = `<div class="line total"><span>自宅の土地の評価<small>特例を使わない場合</small></span><b>${yen(h.home)}</b></div>`;
+    return;
+  }
+  const tgt = !h.area ? `<small>広さが未入力のため、全体を対象として計算しています</small>`
+            : h.area<=LIMIT ? `<small>${fmt(h.area)}㎡ すべてが対象です</small>`
+            : `<small>${fmt(h.area)}㎡ のうち ${LIMIT}㎡ 分が対象です</small>`;
+  box.innerHTML =
+    `<div class="line"><span>もとの評価額</span><b>${yen(h.home)}</b></div>`+
+    `<div class="line"><span>特例の対象になる部分${tgt}</span><b>${yen(h.target)}</b></div>`+
+    `<div class="line minus"><span>80%の減額</span><b>−${yen(h.reduce)}</b></div>`+
+    `<div class="line total"><span>特例を使った後の評価</span><b>${yen(h.evalv)}</b></div>`;
+}
+const fmt = n => n.toLocaleString("ja-JP", {maximumFractionDigits:2});
+["home","area"].forEach(id=>$("a-"+id).addEventListener('input', updateHome));
+$("a-small").addEventListener('change', updateHome);
 
 /* ---------- 計算（相続税法 15・16・19条の2） ---------- */
 const TABLE = [ // 上限(円), 税率, 控除額(円)
@@ -308,12 +359,11 @@ function shares(h, actual){ // actual=true: 実際の人数で割る
 
 function calc(){
   const h = heirInfo(), N = h.counted;
-  const home = val("home")*MAN, small = $("a-small").checked;
-  const homeEval = small ? home*0.2 : home;
+  const hc = homeCalc(), home = hc.home, small = hc.small, homeEval = hc.evalv;
   const ins = val("ins")*MAN, ret = val("ret")*MAN;
   const exempt = 500*MAN*N;
   const insTax = Math.max(0, ins-exempt), retTax = Math.max(0, ret-exempt);
-  const plain = (val("cash")+val("sec")+val("land")+val("bld")+val("oth"))*MAN;
+  const plain = (val("cash")+val("sec")+val("own")+val("land")+val("bld")+val("oth"))*MAN;
   const grossRaw = plain + home + ins + ret;
   const gross = plain + homeEval + insTax + retTax;
   const minus = (val("debt")+val("fun"))*MAN;
@@ -346,7 +396,7 @@ function calc(){
   const pay = people.reduce((t,p)=>t+p.tax,0);
   const spRed = people.filter(p=>p.red).reduce((t,p)=>t+Math.min(p.red,p.base),0);
   const sibAdd = people.reduce((t,p)=>t+(p.add||0),0);
-  return {N, home, homeEval, small, ins, ret, exempt, insTax, retTax, grossRaw, gross, minus, net, basic, taxable, total, people, pay, spRed, sibAdd, rank:h.rank};
+  return {N, home, homeEval, small, area:hc.area, cover:hc.cover, ins, ret, exempt, insTax, retTax, grossRaw, gross, minus, net, basic, taxable, total, people, pay, spRed, sibAdd, rank:h.rank};
 }
 
 const yen = x => Math.round(x/MAN).toLocaleString("ja-JP") + "万円";
@@ -369,7 +419,10 @@ function renderResult(){
 
   const rows = [];
   rows.push(["財産の合計", "入力した金額をそのまま足したもの", yen(r.grossRaw), ""]);
-  if (r.small && r.home) rows.push(["自宅の土地の特例", "評価を80%下げる", "−"+yen(r.home-r.homeEval), "minus"]);
+  if (r.small && r.home){
+    const d = !r.area ? "自宅の土地の評価を80%下げる" : r.area<=LIMIT ? `${fmt(r.area)}㎡ すべての評価を80%下げる` : `${fmt(r.area)}㎡ のうち ${LIMIT}㎡ 分の評価を80%下げる`;
+    rows.push(["小規模宅地等の特例", d, "−"+yen(r.home-r.homeEval), "minus"]);
+  }
   if (r.ins) rows.push(["保険金の非課税枠", `500万円 × ${r.N}人`, "−"+yen(r.ins-r.insTax), "minus"]);
   if (r.ret) rows.push(["退職金の非課税枠", `500万円 × ${r.N}人`, "−"+yen(r.ret-r.retTax), "minus"]);
   if (r.minus) rows.push(["借入金・葬式費用", "", "−"+yen(r.minus), "minus"]);
@@ -405,7 +458,7 @@ function go(n, first){
 $("to2").onclick=()=>go(2); $("back1").onclick=()=>go(1);
 $("to3").onclick=()=>go(3); $("back2").onclick=()=>go(2); $("back0").onclick=()=>go(1);
 
-renderStep1(); go(1, true);
+renderStep1(); updateHome(); go(1, true);
 })();
 </script>
 </body>
