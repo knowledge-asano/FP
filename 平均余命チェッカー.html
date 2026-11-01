@@ -124,6 +124,7 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
 #chart text { fill: var(--muted); font-family: var(--font-body); font-size: 11px; }
 .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); margin-top: 6px; }
 .legend i { display: inline-block; width: 22px; height: 0; border-top: 2px dashed var(--fg); vertical-align: middle; margin-right: 6px; }
+.legend i.l90 { border-top: 2px solid var(--death); }
 .legend i.half { border-top: 2px dotted var(--muted); }
 
 /* 表 */
@@ -211,7 +212,7 @@ tr.mark td { font-weight: 700; color: var(--accent); }
     <div class="readout" id="readout">棒をタップすると、その年齢の数字が出ます。</div>
     <div id="chart"></div>
     <div class="legend">
-      <span><i></i>平均余命が尽きる時点（その後の棒は薄い色）</span>
+      <span><i class="l90"></i>90歳（その後の棒は薄い色）</span>
       <span><i class="half"></i>50％（半分の人が生きている）</span>
     </div>
   </section>
@@ -324,7 +325,7 @@ function render() {
     `<tr class="${i === r.endIdx ? "mark" : ""}"><td>${row.age}歳</td><td>${row.k}年後</td><td>${pct(row.p)}</td><td>約${Math.round(row.p * 100)}人</td></tr>`
   ).join("");
 
-  if (state.sel === null || state.sel >= r.rows.length) state.sel = r.endIdx;
+  if (state.sel === null || state.sel >= r.rows.length) state.sel = defSel(r);
   drawChart(r);
   showReadout(r);
 }
@@ -355,6 +356,10 @@ function renderDecades(r) {
   }).join("");
 }
 
+function defSel(r) { // 数字表示の初期位置＝90歳（91歳以上は平均余命が尽きる年）
+  return state.age <= 90 ? 90 - state.age : r.endIdx;
+}
+
 function showReadout(r) {
   const row = r.rows[state.sel];
   $("readout").innerHTML = `<b>${row.age}歳</b>（${row.k}年後）：生きている人 <b>${pct(row.p)}</b>　100人中 約${Math.round(row.p * 100)}人`;
@@ -364,7 +369,7 @@ function drawChart(r) {
   const box = $("chart");
   const W = Math.max(280, box.clientWidth || 600);
   const H = Math.round(Math.min(300, Math.max(220, W * 0.5)));
-  const L = 40, R = 8, T = 10, B = 26;
+  const L = 40, R = 8, T = 26, B = 26;
   const pw = W - L - R, ph = H - T - B;
   const n = r.rows.length;
   const band = pw / n;
@@ -384,12 +389,16 @@ function drawChart(r) {
   r.rows.forEach((row, i) => {
     const x = xOf(i) - bw / 2, y = yOf(row.p);
     const sel = i === state.sel;
-    s += `<rect x="${x}" y="${y}" width="${bw}" height="${yOf(0) - y}" fill="var(--accent)" opacity="${sel ? 1 : (i <= r.endIdx ? 0.62 : 0.28)}" rx="${bw > 6 ? 2 : 0}"/>`;
+    s += `<rect x="${x}" y="${y}" width="${bw}" height="${yOf(0) - y}" fill="var(--accent)" opacity="${sel ? 1 : (row.age <= 90 ? 0.62 : 0.28)}" rx="${bw > 6 ? 2 : 0}"/>`;
     if (sel) s += `<rect x="${x}" y="${y}" width="${bw}" height="${yOf(0) - y}" fill="none" stroke="var(--fg)" stroke-width="1.5"/>`;
   });
-  // 平均余命が尽きる時点（点線）
-  const xe = L + band * (r.ex + 0.5);
-  if (xe <= W - R) s += `<line x1="${xe}" x2="${xe}" y1="${T}" y2="${yOf(0)}" stroke="var(--fg)" stroke-width="1.5" stroke-dasharray="5 4" fill="none"/>`;
+  // 90歳の線（赤）：90歳の棒のすぐ右
+  if (state.age <= 90) {
+    const x90 = L + band * (90 - state.age + 1);
+    s += `<line x1="${x90}" x2="${x90}" y1="${T - 4}" y2="${yOf(0)}" stroke="var(--death)" stroke-width="2" fill="none"/>`;
+    const tx = Math.min(W - R - 16, Math.max(L + 16, x90));
+    s += `<text x="${tx}" y="${T - 9}" text-anchor="middle" style="fill:var(--death);font-weight:700;font-size:12px">90歳</text>`;
+  }
   // 横軸ラベル（重ならない間隔を選ぶ）
   const step = [1, 2, 5, 10].find(st => band * st >= 30) || 10;
   r.rows.forEach((row, i) => {
@@ -403,9 +412,14 @@ function drawChart(r) {
   s += `</svg>`;
   box.innerHTML = s;
   box.querySelectorAll("rect[data-i]").forEach(el => {
-    const pick = () => { state.sel = +el.dataset.i; drawChart(r); showReadout(r); };
+    const pick = () => { const i = +el.dataset.i; if (i === state.sel) return; state.sel = i; drawChart(r); showReadout(r); };
     el.addEventListener("click", pick);
     el.addEventListener("mouseenter", pick);
+  });
+  // グラフから指やマウスが離れたら、90歳の表示に戻す
+  box.querySelector("svg").addEventListener("mouseleave", () => {
+    const d = defSel(r);
+    if (state.sel !== d) { state.sel = d; drawChart(r); showReadout(r); }
   });
 }
 
