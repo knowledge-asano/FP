@@ -33,13 +33,15 @@ h2{font-family:var(--f-display);font-weight:600;font-size:1.25rem;margin:0 0 4px
 .lead{color:var(--muted);margin:4px 0 0;font-size:.95rem}
 
 /* ステップ表示 */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;list-style:none;margin:0;padding:0}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;list-style:none;margin:0;padding:0}
 .steps li{font-size:.85rem;text-align:center;padding:8px 4px 6px;border-bottom:3px solid var(--line);color:var(--muted)}
 .steps li b{display:block;font-size:.75rem;letter-spacing:.08em}
 .steps li.on{border-color:var(--accent);color:var(--fg);font-weight:700}
 .steps li.done{border-color:var(--blue);color:var(--blue)}
+.steps li.skip{opacity:.35}
+.step2note{margin:0;font-size:.92rem;line-height:1.7}
 
-.panel{scroll-margin-top:12px;background:var(--surface);border-radius:12px;padding:20px 18px;display:flex;flex-direction:column;gap:18px}
+.spbox,.panel{scroll-margin-top:12px;background:var(--surface);border-radius:12px;padding:20px 18px;display:flex;flex-direction:column;gap:18px}
 
 /* 人数の入力 */
 .row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -97,6 +99,9 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-o
 .hero.zero{background:var(--blue-soft)}
 .hero.zero .big{color:var(--ok)}
 .hero p{margin:6px 0 0;font-size:.92rem}
+.hero.note{padding:16px 18px;text-align:left;font-size:1.08rem;font-weight:700;line-height:1.75}
+.hero.note b{color:var(--accent);font-size:1.45rem;font-variant-numeric:tabular-nums;white-space:nowrap;margin:0 2px}
+.hero.note.zero b{color:var(--ok)}
 
 .bar{display:flex;flex-direction:column;gap:6px}
 .bar .track{position:relative;height:22px;border-radius:6px;background:var(--line);overflow:hidden}
@@ -121,6 +126,33 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-o
 .person .tax small{display:block;font-size:.75rem;color:var(--muted);font-weight:400}
 .person .note{grid-column:1 / -1;font-size:.8rem;color:var(--warn)}
 
+/* 一次＋二次相続の比較 */
+.cmpbar{display:flex;flex-direction:column;gap:14px}
+.cmpbar .head{display:flex;justify-content:space-between;gap:4px 12px;flex-wrap:wrap;font-size:.92rem;margin-bottom:4px}
+.cmpbar .head b{font-variant-numeric:tabular-nums}
+.stack{display:flex;height:26px;border-radius:6px;overflow:hidden}
+.stack .t1{background:var(--blue)} .stack .t2{background:var(--accent)}
+.cmpbar .legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:.82rem;color:var(--muted)}
+.cmpbar .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+.cards{display:grid;gap:12px}
+.card{border-radius:12px;padding:16px;background:var(--bg);display:flex;flex-direction:column;gap:8px;min-width:0}
+.card.best{background:var(--accent-soft)}
+.card h3{margin:0;font-family:var(--f-display);font-weight:800;font-size:1.1rem}
+.card .share{margin:0 0 4px;font-size:.88rem;color:var(--muted)}
+.card .line{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.card .line b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.card .line.sum{border-top:1px solid var(--line);padding-top:8px}
+.card .line.sum b{color:var(--warn);font-size:1.2rem}
+.card .line.left b{font-size:1.2rem}
+.spbox{display:flex;flex-direction:column;gap:14px;padding:16px;border-radius:12px;background:var(--blue-soft)}
+.spbox .spbox-t{margin:0 0 4px;font-weight:700;font-size:1.05rem;color:var(--blue)}
+.spbox .money{background:var(--surface)}
+.cond{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;background:var(--blue-soft);border-radius:10px;padding:12px 14px;font-size:.88rem}
+.cond span{min-width:0;flex:1 1 220px}
+.cond button{font:inherit;font-weight:700;font-size:.88rem;background:var(--surface);color:var(--blue);border:1.5px solid var(--blue);border-radius:8px;padding:8px 14px;cursor:pointer;min-height:42px}
+details.more{border-radius:10px;background:var(--bg);padding:12px 14px}
+details.more summary{cursor:pointer;font-weight:700}
+details.more[open] summary{margin-bottom:10px}
 .notes{font-size:.85rem;color:var(--muted);line-height:1.65;margin:0;padding-left:1.2em}
 .notes li+li{margin-top:4px}
 .src{font-size:.78rem;color:var(--muted)}
@@ -129,6 +161,12 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-o
 /* 復元のお知らせ・リセット */
 .restorenote{background:var(--blue-soft);border-radius:10px;padding:10px 14px;font-size:.85rem;margin:10px 0 0}
 .resetbtn{font:inherit;font-size:.82rem;background:transparent;border:1.5px solid var(--line);border-radius:8px;color:var(--muted);padding:6px 12px;cursor:pointer;margin-top:10px;min-height:40px}
+
+.savestat{font-size:.82rem;color:var(--ok);margin:10px 0 0;line-height:1.55}
+.savestat.ng{color:var(--warn);font-weight:700;background:var(--accent-soft);border-radius:10px;padding:10px 14px}
+.resetask{background:var(--surface);border-radius:12px;padding:14px;margin-top:10px;display:flex;flex-direction:column;gap:10px}
+.resetask p{margin:0;font-size:.92rem}
+.resetask .btn{min-height:48px;font-size:.95rem}
 
 /* 金額の読み替え（1億2,000万円など） */
 .oku{color:var(--blue);font-weight:700;font-size:.9rem;margin:0}
@@ -173,12 +211,74 @@ body.has-bar{padding-bottom:120px}
 .fundbox .fline{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:.95rem}
 .fundbox .fline b{font-variant-numeric:tabular-nums;white-space:nowrap}
 .fundbox .fline.total{border-top:1px solid var(--line);padding-top:8px}
+.fundbox .fline.fres{font-weight:700;font-size:1.05rem;background:var(--surface);border-top:0;border-radius:10px;padding:12px 14px}
+.fundbox .fline.fres{flex-wrap:wrap;row-gap:2px}
+.fundbox .fline.fres span{flex:1 0 auto}
+.fundbox .fline.fres b{font-size:1.45rem;color:var(--ok);margin-left:auto}
+.fundbox.warn .fline.fres b{color:var(--warn)}
 .fundbox .ftrack{position:relative;height:20px;border-radius:6px;background:var(--surface);overflow:hidden}
 .fundbox .ffill{position:absolute;inset:0 auto 0 0;background:var(--blue)}
 .fundbox.warn .ffill{background:var(--warn)}
 .fundbox .flegend{display:flex;justify-content:space-between;gap:10px;font-size:.8rem;color:var(--muted);flex-wrap:wrap}
 .fundbox ul{margin:0;padding-left:1.2em;font-size:.88rem}
 .fundbox p{margin:0;font-size:.9rem}
+/* 二次相続まで考えた分け方 */
+.sec2{background:var(--bg);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:16px;scroll-margin-top:12px}
+.sec2 h2{margin:0}
+.sec2 h3{font-size:1rem;margin:0}
+.sec2 p{margin:0;font-size:.92rem}
+.sec2 .money{background:var(--surface)}
+.sec2 .blk{display:flex;flex-direction:column;gap:8px}
+.twostep{display:flex;align-items:stretch;gap:8px}
+.twostep .ts{flex:1;background:var(--surface);border-radius:10px;padding:10px 12px;font-size:.88rem;line-height:1.55}
+.twostep .ts b{display:block;font-size:.95rem}
+.twostep .t1 b{color:var(--blue)}
+.twostep .t2 b{color:var(--accent)}
+.twostep .ts small{display:block;color:var(--muted);font-size:.78rem;margin-top:4px}
+.twostep .arr{align-self:center;color:var(--muted);font-weight:700}
+@media (max-width:480px){.twostep{flex-direction:column}.twostep .arr{transform:rotate(90deg)}}
+.bestcard{background:var(--accent-soft);border-radius:12px;padding:16px;text-align:center;display:flex;flex-direction:column;gap:6px}
+.bestcard .cap{font-size:.88rem;color:var(--muted)}
+.bestcard .big{font-family:var(--f-display);font-weight:800;font-size:2rem;line-height:1.25;color:var(--accent);font-variant-numeric:tabular-nums}
+.bestcard .big small{font-size:1rem;margin-left:2px}
+.bestcard .sum{font-size:.95rem;font-variant-numeric:tabular-nums}
+.bestcard .save{font-weight:700;color:var(--ok)}
+.bestcard .now{font-size:.85rem;color:var(--muted)}
+.bestcard button{font:inherit;font-weight:700;background:var(--accent);color:#fff;border:0;border-radius:10px;padding:12px;cursor:pointer;min-height:48px;margin-top:4px}
+.schart{position:relative;height:170px;display:flex;align-items:flex-end;border-bottom:1.5px solid var(--fg);cursor:pointer;touch-action:pan-y;background:var(--surface);border-radius:8px 8px 0 0}
+.schart .c{flex:1;height:100%;display:flex;flex-direction:column-reverse}
+.schart .f1{background:var(--blue)}
+.schart .f2{background:var(--accent)}
+.schart .mk{position:absolute;top:0;bottom:0;width:0;pointer-events:none}
+.schart .mk.best{border-left:3px solid var(--fg);margin-left:-1.5px}
+.schart .mk.cur{border-left:2px dashed var(--muted);margin-left:-1px}
+.xax{position:relative;height:1.5em;font-size:.78rem;color:var(--muted)}
+.xax span{position:absolute;top:2px;transform:translateX(-50%);white-space:nowrap}
+.xax span:first-child{transform:none}
+.xax span:last-child{transform:translateX(-100%)}
+.clegend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.8rem;color:var(--muted)}
+.clegend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+.clegend .ln{display:inline-block;width:0;height:12px;margin-right:6px;vertical-align:-1px}
+.readout{background:var(--surface);border-radius:8px;padding:8px 12px;font-size:.88rem;font-variant-numeric:tabular-nums}
+.cmp{width:100%;border-collapse:collapse;font-size:.88rem;background:var(--surface);border-radius:10px;overflow:hidden}
+.cmp th,.cmp td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+.cmp th:first-child,.cmp td:first-child{text-align:left;white-space:normal}
+.cmp th{font-size:.8rem;color:var(--muted);vertical-align:bottom;line-height:1.4}
+.cmp th.b{color:var(--accent)}
+.cmp td{white-space:nowrap}
+.cmp td small{display:block;color:var(--muted);font-size:.75rem}
+.cmp td.b{background:var(--accent-soft)}
+.cmp tr.tot td{font-weight:700;border-bottom:0}
+.cmp tr.tot td.b{color:var(--accent)}
+.why{background:var(--surface);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.why ul{margin:0;padding-left:1.2em;font-size:.9rem}
+.why li+li{margin-top:4px}
+.pl{color:var(--warn)}
+.mi{color:var(--ok)}
+.sec2 .flow{background:var(--surface);border-radius:10px}
+.sec2 .flow td{padding-left:12px;padding-right:12px}
+.hero .secline{margin-top:12px}
+.hero a{color:var(--blue);font-weight:700}
 @media (prefers-reduced-motion:no-preference){.panel{animation:in .25s ease-out}@keyframes in{from{transform:translateY(6px)}to{transform:none}}}
 </style>
 </head>
@@ -187,14 +287,20 @@ body.has-bar{padding-bottom:120px}
   <header>
     <h1>相続税かんたん試算</h1>
     <p class="lead">家族の人数と財産を入れると、相続税のおおよその額がわかります。金額は「万円」で入れてください。</p>
-    <p class="restorenote" id="restoreNote" hidden>前回の入力を復元しました。入力内容はこの端末にだけ自動で保存されます。</p>
+    <p class="savestat" id="saveStat"></p>
+    <p class="restorenote" id="restoreNote" hidden>前回の入力を復元しました。</p>
     <button type="button" class="resetbtn" id="resetAll">入力をすべて消して最初からやり直す</button>
+    <div class="resetask" id="resetAsk" hidden>
+      <p>入力した家族・財産・分け方を、すべて消して最初からやり直しますか？</p>
+      <div class="nav"><button type="button" class="btn ghost" id="resetNo">やめる</button><button type="button" class="btn primary" id="resetYes">すべて消す</button></div>
+    </div>
   </header>
 
   <ol class="steps" id="steps">
     <li data-s="1"><b>STEP 1</b>家族</li>
-    <li data-s="2"><b>STEP 2</b>財産</li>
-    <li data-s="3"><b>STEP 3</b>結果</li>
+    <li data-s="2"><b>STEP 2</b>一次相続</li>
+    <li data-s="3"><b>STEP 3</b>二次相続</li>
+    <li data-s="4"><b>STEP 4</b>結果</li>
   </ol>
 
   <!-- STEP 1 -->
@@ -245,11 +351,11 @@ body.has-bar{padding-bottom:120px}
   <!-- STEP 2 -->
   <section class="panel" id="p2" hidden>
     <div>
-      <h2>財産と借金を入れてください</h2>
+      <h2>亡くなった方の財産と借金を入れてください</h2>
       <p class="hint">わからない項目は 0 のままで大丈夫です。土地・建物は固定資産税の通知書や路線価のおおよその額で構いません。</p>
     </div>
 
-    <p class="grp-title">プラスの財産</p>
+    <p class="grp-title">亡くなった方のプラスの財産</p>
     <div class="field"><label for="a-cash">預貯金・現金</label><div class="money"><input id="a-cash" inputmode="numeric" value="0"><span>万円</span></div></div>
     <div class="field"><label for="a-sec">株式・投資信託など</label><div class="money"><input id="a-sec" inputmode="numeric" value="0"><span>万円</span></div></div>
     <div class="field"><label for="a-own">自社株（未上場株）<small>オーナー会社の株式など</small></label><div class="money"><input id="a-own" inputmode="numeric" value="0"><span>万円</span></div>
@@ -272,60 +378,54 @@ body.has-bar{padding-bottom:120px}
     <div class="field"><label for="a-debt">借入金・未払いの税金など</label><div class="money"><input id="a-debt" inputmode="numeric" value="0"><span>万円</span></div></div>
     <div class="field"><label for="a-fun">お葬式の費用<small>香典返し・法要の費用は除く</small></label><div class="money"><input id="a-fun" inputmode="numeric" value="0"><span>万円</span></div></div>
 
-    <div class="nav"><button class="btn ghost" type="button" id="back1">戻る</button><button class="btn primary" type="button" id="to3">相続税を計算する</button></div>
+    <div class="nav"><button class="btn ghost" type="button" id="back1">戻る</button><button class="btn primary" type="button" id="to3">次へ（二次相続の入力）</button></div>
+  </section>
+
+  <!-- STEP 3：二次相続 -->
+  <section class="panel" id="p3" hidden>
+    <div>
+      <h2>二次相続の条件を入れてください</h2>
+      <p class="step2note">二次相続は、残された配偶者が亡くなったときの相続です。そのときの配偶者の財産は、<b>もともとの財産 ＋ 一次相続で受け取る分 − 一次相続の税金 − 使うお金</b> で計算します。</p>
+    </div>
+    <div class="spbox" id="spOwnBox">
+      <div class="field">
+        <label for="spOwn">配偶者がもともと持っている財産<small>預貯金・自宅の持ち分など</small></label>
+        <div class="money"><input id="spOwn" inputmode="numeric" value="0"><span>万円</span></div>
+        <p class="hint oku" id="oku-spOwn" hidden></p>
+      </div>
+      <div class="field">
+        <label for="spUse">二次相続までに配偶者が使う金額<small>生活費・医療費・介護費など</small></label>
+        <div class="money"><input id="spUse" inputmode="numeric" value="0"><span>万円</span></div>
+        <p class="hint oku" id="oku-spUse" hidden></p>
+        <p class="hint">例：年間200万円 × 10年なら 2,000万円</p>
+      </div>
+    </div>
+
+    <div class="nav"><button class="btn ghost" type="button" id="back2b">戻る</button><button class="btn primary" type="button" id="to4">相続税を計算する</button></div>
   </section>
 
   <!-- STEP 3 -->
-  <section class="panel" id="p3" hidden>
+  <section class="panel" id="p4" hidden>
+    <div class="cmpbar" id="chart"></div>
+    <div class="cards" id="cards"></div>
     <div id="hero"></div>
-    <div class="bar" id="bar"></div>
+    <div class="cond" id="cond" hidden></div>
 
-    <div class="sharebox" id="shareBox" hidden>
-      <div>
-        <h2>財産の分け方を変えてみる</h2>
-        <p class="hint">配偶者が受け取る割合を動かすと、税金がどう変わるかその場で試せます。その他の家族は、残りを均等に分けます。</p>
-      </div>
-      <input type="range" id="spShare" min="0" max="100" step="1" value="50" aria-label="配偶者が受け取る割合">
-      <div class="vals"><span id="spShareLbl"></span><span id="spShareAmt"></span></div>
-      <button class="btn ghost" type="button" id="spShareReset" hidden>法定相続分どおりに戻す</button>
-
-      <div class="guide">
-        <p class="guide-t">どのあたりにしたらいい？</p>
-        <p>今回の相続税だけを見れば、配偶者が多く受け取るほど安くなります。配偶者は「1億6,000万円」か「法定相続分」の大きい方まで税金がかからないからです。</p>
-        <p>それでも割合を下げる意味があるのは、<b>次に配偶者が亡くなったときの相続（二次相続）</b>です。配偶者がたくさん受け取ると、その分が次の相続の財産に上乗せされ、子どもが払う税金が増えます。つまり目安は「今回の税金」と「次の税金」の合計で考えます。</p>
-        <div class="cand" id="candBox"></div>
-        <div class="field">
-          <label for="spOwn">配偶者がもともと持っている財産<small>二次相続の目安に使います</small></label>
-          <div class="money"><input id="spOwn" inputmode="numeric" value="0"><span>万円</span></div>
-          <p class="hint oku" id="oku-spOwn" hidden></p>
-        </div>
-        <div id="secondBox"></div>
-        <p class="hint">二次相続の目安は「配偶者が受け取った財産をそのまま残し、子どもが均等に相続した場合」の概算です。実際には、配偶者の生活費で減ったり、配偶者自身の自宅の特例などで変わります。また、税金が最小になる割合が正解とは限りません。配偶者の今後の生活費・医療費に必要な額を下回らないことが先です。</p>
-      </div>
-    </div>
-
-    <div>
-      <h2>計算の流れ</h2>
+    <details class="more"><summary>計算の前提</summary>
+      <ul class="notes">
+        <li>二次相続は、配偶者の財産（もともとの財産＋今回受け取った分−今回の税金−使うお金）を、子どもが均等に相続すると仮定しています。</li>
+        <li>「残る財産」は、二次相続まで終わったあとに家族に残る財産です。</li>
+        <li>生前贈与、財産の値上がり・値下がり、二次相続での自宅の特例、相次相続控除は入れていません。</li>
+        <li>税金が最も少ない分け方が正解とは限りません。配偶者の今後の生活に必要なお金を先に考えてください。</li>
+        <li>この結果は目安です。実際の分け方・申告は税理士にご相談ください。申告と納税の期限は、亡くなったことを知った日の翌日から10か月以内です。</li>
+      </ul>
+    </details>
+    <details class="more"><summary>一次相続のくわしい計算（法定相続分どおり）</summary>
       <table class="flow" id="flow"></table>
-    </div>
-
-    <div>
-      <h2>一人ひとりが納める額</h2>
-      <p class="hint" style="margin-bottom:10px" id="peopleHint">法律で決まった割合（法定相続分）どおりに分けた場合です。</p>
-      <div class="people" id="people"></div>
-    </div>
-
-    <div>
-      <h2>納税資金は足りるか</h2>
-      <p class="hint" style="margin-bottom:10px">相続税は原則として現金で、10か月以内に納めます。すぐに現金化できる財産と、納める税金を比べます。</p>
+    </details>
+    <details class="more"><summary>納税資金は足りるか（法定相続分どおり）</summary>
       <div id="fundBox"></div>
-    </div>
-
-    <ul class="notes">
-      <li>この結果は目安です。実際の申告は税理士にご相談ください。</li>
-      <li>亡くなる前7年以内の生前贈与、未成年者控除・障害者控除、相次相続控除などは入っていません。</li>
-      <li>申告と納税の期限は、亡くなったことを知った日の翌日から10か月以内です。配偶者の軽減や土地の特例は、税金が0円でも申告が必要です。</li>
-    </ul>
+    </details>
 
     <div class="nav"><button class="btn ghost" type="button" id="back2">財産を直す</button><button class="btn primary" type="button" id="back0">家族から直す</button></div>
     <p class="src">税率・控除は国税庁タックスアンサーNo.4152・No.4155（2026年10月時点）による。<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/4155.htm" target="_blank" rel="noopener">国税庁 No.4155 相続税の税率</a></p>
@@ -368,6 +468,7 @@ function renderStep1(){
   $("adoptBox").hidden = st.kids === 0;
   $("parentBox").hidden = st.kids > 0;
   $("sibBox").hidden = st.kids > 0 || st.parents > 0;
+  $("to3").textContent = need2() ? "次へ（二次相続の入力）" : "相続税を計算する";
   document.querySelectorAll('.count button').forEach(b=>{
     const k=b.dataset.k, d=+b.dataset.d;
     const max = k==="parents" ? 2 : (k==="adopt" ? st.kids : 15);
@@ -395,7 +496,12 @@ document.querySelectorAll('.count button').forEach(b=>b.addEventListener('click'
 
 /* ---------- 金額入力（カンマ付け） ---------- */
 const ids = ["cash","sec","own","home","area","land","bld","ins","ret","oth","debt","fun"];
-function val(id){ const v = $("a-"+id).value.replace(/[^\d.]/g,""); return v ? parseFloat(v) : 0; }
+// 全角の数字・カンマ・小数点（日本語入力のまま打った「３，０００」など）も読めるようにする
+function num(str){
+  const v = String(str).replace(/[０-９．，]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/[。]/g, ".").replace(/[^\d.]/g, "");
+  const n = parseFloat(v); return isFinite(n) ? n : 0;
+}
+function val(id){ return num($("a-"+id).value); }
 ids.forEach(id=>{
   const el = $("a-"+id);
   el.addEventListener('focus', ()=>{ el.value = el.value.replace(/,/g,""); el.select(); });
@@ -520,60 +626,34 @@ function calc(pctOverride){
   return {N, home, homeEval, small, area:hc.area, cover:hc.cover, ins, ret, exempt, insTax, retTax, grossRaw, gross, minus, net, basic, taxable, total, people, pay, spRed, sibAdd, rank:h.rank, aSp:a.sp, statSp:s.sp};
 }
 
-/* 二次相続の概算：配偶者の財産（固有財産＋今回受け取った分）を子どもが均等に相続した場合 */
-function secondTax(estateYen, kids){
-  if (!kids || estateYen <= 0) return 0;
-  const basic2 = (3000 + 600*kids)*MAN;
-  const tx = Math.max(0, Math.floor((estateYen - basic2)/1000)*1000);
-  if (!tx) return 0;
-  let t = 0;
-  for (let i=0;i<kids;i++) t += rateTax(tx/kids);
-  return Math.floor(t/100)*100;
+/* ---------- 二次相続（配偶者が亡くなったとき）の計算 ---------- */
+function bracketRate(x){ x = Math.floor(x/1000)*1000; for (const [u,r] of TABLE){ if (x<=u) return r; } return .55; }
+function secondDetail(estate, n){ // n = 二次相続の法定相続人（子ども）の数
+  const basic = (3000 + 600*n)*MAN;
+  const taxable = Math.max(0, Math.floor((estate - basic)/1000)*1000);
+  const per = n ? taxable/n : 0;
+  const tax = n && taxable ? Math.floor(n*rateTax(per)/100)*100 : 0;
+  return {estate, n, basic, taxable, per, rate: taxable ? bracketRate(per) : 0, tax};
 }
-function spOwnVal(){ const v = $("spOwn").value.replace(/[^\d.]/g,""); return (v ? parseFloat(v) : 0)*MAN; }
-
-function renderGuide(r){
-  const h = heirInfo();
-  const statPct = Math.round(r.statSp*100);
-  const curPct = Math.round(r.aSp*100);
-  // 割合の候補：タップでその割合に切り替わる
-  const cand = [...new Set([0, 25, statPct, 75, 100])].sort((x,y)=>x-y);
-  $("candBox").innerHTML = cand.map(p=>{
-    const pay = calc(p).pay;
-    const label = p === statPct ? `<small>法定相続分</small>` : "";
-    return `<button type="button" data-pct="${p}" class="${p===curPct ? "on" : ""}"><span class="cp">配偶者 ${p}%${label}</span><span class="ct"><small>今回の税金</small>${yen(pay)}</span></button>`;
-  }).join("");
-  $("candBox").querySelectorAll("button").forEach(b=>b.onclick = ()=>{
-    st.spousePct = +b.dataset.pct; renderResult(); save();
-  });
-  // 二次相続の目安は、相続人が子どもの場合だけ（配偶者の相続人は子どもになるため）
-  const box = $("secondBox");
-  if (r.rank !== 1){
-    box.innerHTML = "";
-    return;
-  }
-  const own = spOwnVal();
-  let best = null;
-  for (let p=0; p<=100; p+=1){
-    const first = calc(p).pay;
-    const second = secondTax(own + r.net*p/100, h.others);
-    const total = first + second;
-    // 合計が同じなら、配偶者の生活資金を多く残せる高い割合を目安にする
-    if (!best || total < best.total || (total === best.total && p > best.p)) best = {p, first, second, total};
-  }
-  const curFirst = calc(curPct).pay;
-  const curSecond = secondTax(own + r.net*curPct/100, h.others);
-  const curTotal = curFirst + curSecond;
-  box.innerHTML = `<div class="secondbox">
-    <div class="best">二次相続まで合わせた目安は<br>配偶者 <b>${best.p}%</b></div>
-    <div>その場合：今回 ${yen(best.first)} ＋ 次回 ${yen(best.second)} ＝ 合計 ${yen(best.total)}</div>
-    <div>今の割合（${curPct}%）だと：今回 ${yen(curFirst)} ＋ 次回 ${yen(curSecond)} ＝ 合計 ${yen(curTotal)}</div>
-    ${best.p !== curPct ? `<button type="button" id="applyBest">最適な割合 ${best.p}% をスライダーに入れる</button>` : `<div>今の割合が、合計では最も少ない目安です。</div>`}
-  </div>`;
-  const ab = $("applyBest");
-  if (ab) ab.onclick = ()=>{ st.spousePct = best.p; renderResult(); save(); };
+function manInput(id){ return num($(id).value)*MAN; }
+function scenario(p, own, use, n){
+  const c = calc(p), sp = c.people[0]; // people[0] は配偶者
+  const estate2 = Math.max(0, own + sp.got - sp.tax - use);
+  const d = secondDetail(estate2, n);
+  return {p, first:c.pay, spGot:sp.got, spTax:sp.tax, estate2, d, second:d.tax, total:c.pay + d.tax};
 }
-
+function secondAnalysis(r){
+  const h = heirInfo(), own = manInput("spOwn"), use = manInput("spUse");
+  const list = [];
+  for (let p=0; p<=100; p++) list.push(scenario(p, own, use, h.countedOthers));
+  // 合計が同じなら、配偶者の生活資金を多く残せる高い割合を目安にする
+  let best = list[0];
+  list.forEach(s=>{ if (s.total <= best.total) best = s; });
+  let lo = best.p; while (lo > 0 && list[lo-1].total === best.total) lo--;
+  const statPct = Math.round(r.statSp*100), curPct = Math.round(r.aSp*100);
+  return {list, best, lo, statPct, stat:list[statPct], cur:list[curPct], own, use, kids:h.others};
+}
+const sgn = x => { const m = Math.round(Math.abs(x)/MAN); return !m ? "±0万円" : x>0 ? `<span class="pl">＋${m.toLocaleString("ja-JP")}万円</span>` : `<span class="mi">−${m.toLocaleString("ja-JP")}万円</span>`; };
 /* 納税資金チェック：現預金＋株式・投資信託＋死亡保険金＋死亡退職金（すぐ現金化できる財産）と税額の比較 */
 function renderFunds(r){
   const cash = val("cash")*MAN, sec = val("sec")*MAN;
@@ -604,7 +684,7 @@ function renderFunds(r){
     <div class="fline"><span>納める相続税（家族全員分）</span><b>${yen(pay)}</b></div>
     <div class="ftrack"><div class="ffill" style="width:${pct}%"></div></div>
     <div class="flegend"><span>バー：税金に対して現金化できる財産がどれだけあるか</span><span>${liquid/pay >= 10 ? "税金の約" + Math.round(liquid/pay) + "倍" : Math.round(liquid/pay*100) + "%"}</span></div>
-    <div class="fline total"><span>${ok ? "税金を払ったあとに残る分" : "不足する分"}</span><b>${yen(Math.abs(diff))}</b></div>
+    <div class="fline total fres"><span>${ok ? "税金を払ったあとに残る分" : "不足する分"}</span><b>${yen(Math.abs(diff))}</b></div>
     ${ok ? "" : `<ul>
       <li>不足分は、相続する不動産の売却などでまかなう方法があります。ただし売却には時間がかかります。</li>
       <li>税務署に申請して認められれば、延納（財産を担保に分割で納める）や物納（不動産などで納める）もできます。</li>
@@ -614,43 +694,65 @@ function renderFunds(r){
     ${insNote}`;
 }
 
-const yen = x => Math.round(x/MAN).toLocaleString("ja-JP") + "万円";
+const yen = x => {
+  const m = Math.round(x/MAN); if (m===0) return "0円";
+  const o = Math.floor(m/10000), r = m%10000;
+  return o ? o+"億"+(r ? r.toLocaleString("ja-JP")+"万円" : "円") : r.toLocaleString("ja-JP")+"万円";
+};
+function card(title, share, rows, best){
+  return `<div class="card${best?" best":""}"><h3>${title}</h3>${share?`<p class="share">${share}</p>`:""}`+
+    rows.map(([a,b,c])=>`<div class="line ${c||""}"><span>${a}</span><b>${b}</b></div>`).join("")+`</div>`;
+}
+function bar(label, t1, t2, max){
+  return `<div><div class="head"><span>${label}</span><b>${yen(t1+t2)}</b></div>`+
+    `<div class="stack" style="width:${Math.max(2,(t1+t2)/max*100)}%"><div class="t1" style="flex:${t1}"></div><div class="t2" style="flex:${t2}"></div></div></div>`;
+}
 function renderResult(){
-  const r = calc();
-  // 分け方スライダー（配偶者がいて、ほかの相続人もいる場合だけ表示）
-  const sb = $("shareBox");
-  if (st.spouse && r.rank){
-    sb.hidden = false;
-    const pct = Math.round(r.aSp*100);
-    if (document.activeElement !== $("spShare")) $("spShare").value = st.spousePct != null ? st.spousePct : Math.round(r.statSp*100);
-    $("spShareLbl").innerHTML = st.spousePct != null
-      ? `配偶者が <b>${pct}%</b> 受け取る`
-      : `法定相続分どおり（配偶者 ${pct}%）`;
-    $("spShareAmt").textContent = "配偶者の受け取り " + yen(r.net * r.aSp);
-    $("spShareReset").hidden = st.spousePct == null;
-    $("peopleHint").textContent = st.spousePct != null
-      ? `配偶者が${pct}%を受け取り、その他の家族が残りを均等に分けた場合です。`
-      : "法律で決まった割合（法定相続分）どおりに分けた場合です。上のスライダーで分け方を変えられます。";
-    renderGuide(r);
-  } else {
-    sb.hidden = true;
-    $("peopleHint").textContent = "法律で決まった割合（法定相続分）どおりに分けた場合です。";
-  }
-  if (r.taxable === 0){
-    $("hero").className = "hero zero";
-    $("hero").innerHTML = `<div class="cap">相続税の合計</div><div class="big">0<small>円</small></div><p>財産が基礎控除（${yen(r.basic)}）以内なので、相続税はかかりません。</p>`;
-  } else {
-    $("hero").className = "hero";
-    const man = Math.round(r.pay/MAN);
-    $("hero").innerHTML = `<div class="cap">家族全員で納める相続税の合計（目安）</div><div class="big">${man.toLocaleString("ja-JP")}<small>万円</small></div><p>課税される財産 ${yen(r.taxable)} に対する税金です。</p>`;
-  }
-  // 基礎控除との比較バー
-  const max = Math.max(r.net, r.basic) || 1;
-  const fillW = Math.min(r.net, r.basic)/max*100;
-  const overW = r.taxable/max*100;
-  $("bar").innerHTML = `<div class="track"><div class="fill" style="width:${fillW}%"></div>${r.taxable?`<div class="over" style="left:${fillW}%;width:${overW}%"></div>`:""}</div>
-    <div class="legend"><span><i style="background:var(--blue)"></i>基礎控除の範囲（税金なし）</span>${r.taxable?`<span><i style="background:var(--warn)"></i>はみ出た分に税金がかかる</span>`:""}</div>`;
+  const r = calc(null); // 法定相続分どおり
+  $("chart").innerHTML = ""; $("cards").className = "cards";
 
+  if (st.spouse && r.rank === 1){
+    const S = secondAnalysis(r), A = S.stat, B = S.best;
+    const base = r.grossRaw - r.minus + S.own - S.use;   // 家族の財産（入力した金額）
+    const diff = A.total - B.total;
+    if (A.total === 0 && B.total === 0){
+      $("hero").className = "hero note zero";
+      $("hero").innerHTML = `一次相続・二次相続とも基礎控除の範囲内なので、相続税は <b>0円</b> です。`;
+    } else if (diff < MAN){
+      $("hero").className = "hero note";
+      $("hero").innerHTML = `法定相続分どおりの分け方が、いちばん税金が少なくなります（一次・二次の合計 <b>${yen(A.total)}</b>）。`;
+    } else {
+      $("hero").className = "hero note";
+      $("hero").innerHTML = `配偶者の取り分を ${B.p}% にすると、法定相続分どおりより税金の合計が <b>${yen(diff)}</b> 少なくなり、そのぶん残る財産が増えます。`;
+    }
+    const show2 = diff >= MAN;
+    if (A.total > 0){
+      const max = Math.max(A.total, B.total);
+      $("chart").innerHTML = bar("法定相続分どおり", A.first, A.second, max) + (show2 ? bar("税金が最も少ない分け方", B.first, B.second, max) : "") +
+        `<div class="legend"><span><i style="background:var(--blue)"></i>一次相続の税金</span><span><i style="background:var(--accent)"></i>二次相続の税金</span></div>`;
+    }
+    const rows = x => [["一次相続の税金", yen(x.first)], ["二次相続の税金", yen(x.second)], ["税金の合計", yen(x.total), "sum"], ["残る財産", yen(base - x.total), "left"]];
+    let html = card("法定相続分どおり", `配偶者が ${A.p}%（${yen(A.spGot)}）を相続`, rows(A), false);
+    if (show2){ html += card("税金が最も少ない分け方", `配偶者が ${B.p}%（${yen(B.spGot)}）を相続`, rows(B), true); $("cards").className = "cards two"; }
+    $("cards").innerHTML = html;
+    $("cond").hidden = false;
+    $("cond").innerHTML = `<span>二次相続は、配偶者のもともとの財産 <b>${yen(S.own)}</b>、二次相続までに使う金額 <b>${yen(S.use)}</b> として計算しています。</span><button type="button" id="condEdit">金額を変える</button>`;
+    $("condEdit").onclick = ()=>{ go(3); setTimeout(()=>$("spOwn").focus(), 300); };
+  } else {
+    $("cond").hidden = true;
+    const why = !st.spouse ? "配偶者がいないため、二次相続はありません。" : "子どもがいないため、二次相続の比較はしていません。";
+    if (r.pay === 0){
+      $("hero").className = "hero note zero";
+      $("hero").innerHTML = `財産が基礎控除（${yen(r.basic)}）以内なので、相続税は <b>0円</b> です。`;
+    } else {
+      $("hero").className = "hero note";
+      $("hero").innerHTML = why;
+    }
+    $("cards").innerHTML = card("法定相続分どおり", st.spouse ? `配偶者が ${Math.round(r.statSp*100)}% を相続` : "",
+      [["相続税", yen(r.pay), "sum"], ["残る財産", yen(r.grossRaw - r.minus - r.pay), "left"]], false);
+  }
+
+  // くわしい計算（一次相続・法定相続分どおり）
   const rows = [];
   rows.push(["財産の合計", "入力した金額をそのまま足したもの", yen(r.grossRaw), ""]);
   if (r.small && r.home){
@@ -670,14 +772,6 @@ function renderResult(){
     rows.push(["納める税金の合計", "", yen(r.pay), "tax"]);
   }
   $("flow").innerHTML = rows.map(([a,b,c,cls])=>`<tr class="${cls}"><td>${a}${b?`<small>${b}</small>`:""}</td><td>${c}</td></tr>`).join("");
-
-  $("people").innerHTML = r.people.map(p=>{
-    let note = "";
-    if (p.red && r.taxable) note = `<div class="note" style="color:var(--ok)">配偶者の軽減で税金が0円になります</div>`;
-    if (p.add) note = `<div class="note">2割加算の対象です</div>`;
-    return `<div class="person"><div class="who">${p.who}</div><div class="get">受け取る財産 ${yen(p.got)}</div><div class="tax">${yen(p.tax)}<small>納める税金</small></div>${note}</div>`;
-  }).join("");
-
   renderFunds(r);
 }
 
@@ -704,64 +798,144 @@ function updateLiveBar(){
   }
 }
 
-/* ---------- 自動保存（この端末の localStorage のみ） ---------- */
+/* ---------- 自動保存：アカウント（どの端末でも続きから）＋この端末 ---------- */
 const LSKEY = "souzoku-kantan-shisan-v2";
+let localOK = false;
+try { localStorage.setItem(LSKEY+"-test","1"); localStorage.removeItem(LSKEY+"-test"); localOK = true; } catch(e){}
+let cloudRef = null, cloudTimer = null, cloudBusy = false, cloudPending = null, cloudState = "wait", editedBeforeCloud = false;
+
+function collect(){
+  const data = {layout:4, st:{...st}, small:$("a-small").checked, step:currentStep, spOwn:$("spOwn").value, spUse:$("spUse").value, vals:{}, savedAt:Date.now()};
+  ids.forEach(id => data.vals[id] = $("a-"+id).value);
+  return data;
+}
 function save(){
-  try {
-    const data = {st, small:$("a-small").checked, step:currentStep, spOwn:$("spOwn").value, vals:{}};
-    ids.forEach(id => data.vals[id] = $("a-"+id).value);
-    localStorage.setItem(LSKEY, JSON.stringify(data));
-  } catch(e){}
+  const data = collect();
+  if (localOK){ try { localStorage.setItem(LSKEY, JSON.stringify(data)); } catch(e){} }
+  if (cloudRef){
+    cloudPending = data;
+    clearTimeout(cloudTimer); cloudTimer = setTimeout(flushCloud, 800);
+  } else if (cloudState === "wait") editedBeforeCloud = true;
 }
-function load(){
-  try {
-    const raw = localStorage.getItem(LSKEY); if (!raw) return 0;
-    const d = JSON.parse(raw); if (!d || !d.st) return 0;
-    Object.assign(st, d.st);
-    ids.forEach(id => { if (d.vals && d.vals[id] != null) $("a-"+id).value = d.vals[id]; });
-    if (typeof d.small === "boolean") $("a-small").checked = d.small;
-    if (d.spOwn != null) $("spOwn").value = d.spOwn;
-    return [1,2,3].includes(d.step) ? d.step : 1;
-  } catch(e){ return 0; }
+async function flushCloud(){
+  if (cloudBusy || !cloudPending || !cloudRef) return;
+  cloudBusy = true;
+  const d = cloudPending; cloudPending = null;
+  try { await cloudRef.set(d); setStatus("cloud"); }
+  catch(e){ setStatus(localOK ? "local" : "none"); }
+  cloudBusy = false;
+  if (cloudPending) flushCloud();
 }
-$("resetAll").onclick = ()=>{
-  if (!confirm("入力した家族・財産・分け方をすべて消して、最初からやり直しますか？")) return;
-  try { localStorage.removeItem(LSKEY); } catch(e){}
-  location.reload();
+document.addEventListener("visibilitychange", ()=>{ if (document.visibilityState === "hidden"){ clearTimeout(cloudTimer); flushCloud(); } });
+
+function applyData(d){
+  if (!d || !d.st) return 0;
+  Object.assign(st, d.st);
+  ids.forEach(id => { $("a-"+id).value = (d.vals && d.vals[id] != null) ? d.vals[id] : "0"; });
+  $("a-small").checked = d.small === true;
+  $("spOwn").value = d.spOwn != null ? d.spOwn : "0";
+  $("spUse").value = d.spUse != null ? d.spUse : "0";
+  const step = (d.layout !== 4 && d.step === 3) ? 4 : d.step; // 以前の版の「結果」画面
+  return [1,2,3,4].includes(step) ? step : 1;
+}
+function loadLocal(){
+  if (!localOK) return null;
+  try { const raw = localStorage.getItem(LSKEY); return raw ? JSON.parse(raw) : null; } catch(e){ return null; }
+}
+function refreshAll(step){
+  renderStep1(); updateHome(); refreshMoneyHints();
+  refreshSpHint("spOwn"); refreshSpHint("spUse");
+  go(step || 1, true);
+}
+
+function setStatus(kind){
+  cloudState = kind;
+  const el = $("saveStat");
+  el.className = "savestat " + (kind === "none" ? "ng" : "");
+  el.textContent =
+    kind === "cloud" ? "✓ 入力は自動で保存されます（あなたのアカウントに保存。スマホでもPCでも続きから使えます）" :
+    kind === "local" ? "✓ 入力はこの端末に自動で保存されます" :
+    kind === "wait"  ? "保存先を確認しています…" :
+    "⚠ この画面では入力が保存されません。閉じると消えてしまいます。保存したいときは「相続税かんたん試算」のページ（claude.ai のリンク）から開いてください。";
+}
+
+async function initCloud(){
+  if (!window.claude || typeof window.claude.use !== "function"){ setStatus(localOK ? "local" : "none"); return; }
+  try {
+    const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+    const id = db && user ? await user.id() : null;
+    if (!id){ setStatus(localOK ? "local" : "none"); return; }
+    const ref = db.doc("data/users/" + id + "/souzoku");
+    const snap = await Promise.race([ref.get(), new Promise((_, rej)=>setTimeout(()=>rej("timeout"), 10000))]);
+    cloudRef = ref;
+    setStatus("cloud");
+    const remote = snap && snap.exists ? snap.data() : null;
+    const local = loadLocal();
+    const remoteNewer = remote && remote.st && (!local || !local.savedAt || (remote.savedAt || 0) > local.savedAt);
+    if (remoteNewer && !editedBeforeCloud){
+      const step = applyData(remote);
+      refreshAll(step);
+      $("restoreNote").hidden = false;
+      if (localOK){ try { localStorage.setItem(LSKEY, JSON.stringify(remote)); } catch(e){} }
+    } else if (local || editedBeforeCloud){
+      cloudPending = collect(); flushCloud();   // この端末の新しい入力をアカウントにも保存
+    }
+  } catch(e){
+    setStatus(localOK ? "local" : "none");
+  }
+}
+
+/* リセット（ページ内で確認する。ブラウザの確認ダイアログは使わない） */
+$("resetAll").onclick = ()=>{ $("resetAsk").hidden = false; $("resetAll").hidden = true; };
+$("resetNo").onclick = ()=>{ $("resetAsk").hidden = true; $("resetAll").hidden = false; };
+$("resetYes").onclick = async ()=>{
+  $("resetAsk").hidden = true; $("resetAll").hidden = false;
+  Object.assign(st, {spouse:false, kids:0, adopt:0, parents:0, sibs:0, spousePct:null});
+  ids.forEach(id => $("a-"+id).value = "0");
+  $("a-small").checked = false; $("spOwn").value = "0"; $("spUse").value = "0";
+  $("restoreNote").hidden = true;
+  if (localOK){ try { localStorage.removeItem(LSKEY); } catch(e){} }
+  clearTimeout(cloudTimer); cloudPending = null;
+  if (cloudRef){ try { await cloudRef.delete(); } catch(e){} }
+  refreshAll(1);
+  window.scrollTo(0, 0);
 };
 
 /* ---------- 配偶者の取得割合スライダー ---------- */
-$("spShare").addEventListener('input', ()=>{ st.spousePct = +$("spShare").value; renderResult(); save(); });
-$("spShareReset").onclick = ()=>{ st.spousePct = null; renderResult(); save(); };
-$("spOwn").addEventListener('focus', ()=>{ $("spOwn").value = $("spOwn").value.replace(/,/g,""); $("spOwn").select(); });
-$("spOwn").addEventListener('blur', ()=>{ const n = spOwnVal()/MAN; $("spOwn").value = n.toLocaleString("ja-JP"); renderResult(); save(); });
-$("spOwn").addEventListener('input', ()=>{
-  const t = manReadable(spOwnVal()/MAN);
-  $("oku-spOwn").textContent = t; $("oku-spOwn").hidden = !t;
-  renderResult(); save();
+function refreshSpHint(id){ const t = manReadable(manInput(id)/MAN); $("oku-"+id).textContent = t; $("oku-"+id).hidden = !t; }
+["spOwn","spUse"].forEach(id=>{
+  const el = $(id);
+  el.addEventListener('focus', ()=>{ el.value = el.value.replace(/,/g,""); el.select(); });
+  el.addEventListener('blur', ()=>{ el.value = (manInput(id)/MAN).toLocaleString("ja-JP"); refreshSpHint(id); save(); });
+  el.addEventListener('input', ()=>{ refreshSpHint(id); save(); });
 });
 
 /* ---------- 画面の切り替え ---------- */
+// 二次相続の入力は、配偶者と子どもがいるときだけ
+function need2(){ return st.spouse && st.kids > 0; }
 function go(n, first){
+  if (n===3 && !need2()) n = 4;
   currentStep = n;
-  [1,2,3].forEach(i=>$("p"+i).hidden = i!==n);
+  [1,2,3,4].forEach(i=>$("p"+i).hidden = i!==n);
   document.querySelectorAll("#steps li").forEach(li=>{
-    const s=+li.dataset.s; li.className = s===n ? "on" : (s<n ? "done" : "");
+    const s=+li.dataset.s;
+    li.className = (s===3 && !need2()) ? "skip" : s===n ? "on" : (s<n ? "done" : "");
   });
-  if (n===3) renderResult();
+  if (n===4) renderResult();
   updateLiveBar();
   if (!first) save();
   // ページの一番上ではなく、開いた画面（結果など）の先頭へ移動する
   if (!first) $("p"+n).scrollIntoView({block:"start"});
 }
 $("to2").onclick=()=>go(2); $("back1").onclick=()=>go(1);
-$("to3").onclick=()=>go(3); $("back2").onclick=()=>go(2); $("back0").onclick=()=>go(1);
+$("to3").onclick=()=>go(3); $("back2b").onclick=()=>go(2); $("to4").onclick=()=>go(4);
+$("back2").onclick=()=>go(2); $("back0").onclick=()=>go(1);
 
-const startStep = load();
+const startStep = applyData(loadLocal());
 if (startStep) $("restoreNote").hidden = false;
-renderStep1(); updateHome(); refreshMoneyHints();
-{ const t = manReadable(spOwnVal()/MAN); $("oku-spOwn").textContent = t; $("oku-spOwn").hidden = !t; }
-go(startStep || 1, true);
+setStatus("wait");
+refreshAll(startStep || 1);
+initCloud();
 })();
 </script>
 </body>
